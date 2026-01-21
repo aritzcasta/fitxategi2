@@ -20,7 +20,6 @@ class Usuario extends Authenticatable
         'password',
         'horario',
         'activo',
-        'mac',
         'rol_id',
         'empresa_id',
         'fecha_ini',

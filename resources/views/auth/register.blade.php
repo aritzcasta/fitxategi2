@@ -49,15 +49,6 @@
                 @enderror
             </div>
 
-            <!-- MAC -->
-            <div class="mt-4">
-                <label for="mac" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Dirección MAC') }}</label>
-                <input id="mac" type="text" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" name="mac" value="{{ old('mac') }}" required placeholder="00:11:22:33:44:55">
-                @error('mac')
-                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-
             <!-- Password -->
             <div class="mt-4">
                 <label for="password" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Password') }}</label>

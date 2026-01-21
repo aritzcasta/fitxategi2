@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
+use App\Models\RegistroCodigo;
 use App\Models\Rol;
 use App\Models\Usuario;
+use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -68,7 +70,17 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'empresa_id' => ['required', 'integer', 'exists:empresa,id'],
             'fecha_fin' => ['required', 'date'],
-            'mac' => ['required', 'string', 'max:255', 'unique:usuario,mac'],
+            'codigo' => ['required', 'string'],
+        ])->after(function ($validator) use ($data) {
+            $codigo = $data['codigo'] ?? null;
+
+            $valido = RegistroCodigo::where('codigo', $codigo)
+                ->where('expires_at', '>=', Carbon::now())
+                ->exists();
+
+            if (! $valido) {
+                $validator->errors()->add('codigo', 'El código de registro no es válido o ha caducado.');
+            }
         ]);
     }
 
@@ -89,7 +101,6 @@ class RegisterController extends Controller
             'rol_id' => $rol->id,
             'empresa_id' => $data['empresa_id'],
             'fecha_fin' => $data['fecha_fin'],
-            'mac' => $data['mac'],
         ]);
     }
 }
