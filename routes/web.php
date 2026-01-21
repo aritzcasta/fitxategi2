@@ -97,9 +97,18 @@ Route::middleware('session.auth')->group(function () {
         return back()->with('status', 'Entrada registrada correctamente.');
     })->name('fichaje.entrada');
 
-    Route::post('/fichaje/salida', function () {
+    Route::post('/fichaje/salida', function (\Illuminate\Http\Request $request) {
         $usuario = Auth::user();
         $hoy = Carbon::today();
+
+        $codigoIngresado = $request->input('codigo');
+        $codigoValido = RegistroCodigo::where('codigo', $codigoIngresado)
+            ->where('expires_at', '>=', Carbon::now())
+            ->exists();
+
+        if (! $codigoValido) {
+            return back()->with('status', 'El código no es válido o ha caducado.');
+        }
 
         $fichaje = Fichaje::where('id_usuario', $usuario->id)
             ->whereDate('fecha', $hoy)

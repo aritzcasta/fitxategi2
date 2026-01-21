@@ -36,30 +36,24 @@
         </div>
 
         <div class="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
-            <form method="POST" action="{{ route('fichaje.entrada') }}" class="w-full">
+            @php
+                $esSalida = $yaEntrada && ! $yaSalida;
+                $disabledPrincipal = $yaEntrada && ($yaSalida || ! $puedeSalida);
+            @endphp
+            <form method="POST" action="{{ $esSalida ? route('fichaje.salida') : route('fichaje.entrada') }}" class="w-full">
                 @csrf
                 <div>
                     <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código de inicio (15s)</label>
                     <input id="codigo" name="codigo" type="text" required class="mt-2 w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" placeholder="123456">
                 </div>
                 <div class="mt-3 flex flex-col sm:flex-row gap-2 justify-center">
-                <button type="submit" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 {{ $yaEntrada ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-500 focus:ring-indigo-500' }}" {{ $yaEntrada ? 'disabled' : '' }}>
-                    {{ __('Empezar') }}
+                    <button type="submit" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 {{ $disabledPrincipal ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : ($esSalida ? 'bg-emerald-600 text-white hover:bg-emerald-500 focus:ring-emerald-500' : 'bg-indigo-600 text-white hover:bg-indigo-500 focus:ring-indigo-500') }}" {{ $disabledPrincipal ? 'disabled' : '' }}>
+                        {{ $esSalida ? __('Desfichar') : __('Empezar') }}
                 </button>
                     <a href="{{ route('codigo') }}" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-100">
                         {{ __('Ver código') }}
                     </a>
                 </div>
-            </form>
-
-            <form method="POST" action="{{ route('fichaje.salida') }}">
-                @csrf
-                @php
-                    $disabledSalida = ! $yaEntrada || $yaSalida || ! $puedeSalida;
-                @endphp
-                <button type="submit" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 {{ $disabledSalida ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-emerald-600 text-white hover:bg-emerald-500 focus:ring-emerald-500' }}" {{ $disabledSalida ? 'disabled' : '' }}>
-                    {{ __('Salir') }}
-                </button>
             </form>
         </div>
     </div>
