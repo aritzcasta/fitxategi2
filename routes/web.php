@@ -11,11 +11,17 @@ Auth::routes();
 
 function obtenerCodigoActual(): RegistroCodigo
 {
-    $codigo = RegistroCodigo::where('expires_at', '>=', Carbon::now())
-        ->orderByDesc('expires_at')
-        ->first();
+    RegistroCodigo::where('expires_at', '<', Carbon::now())->delete();
+
+    $codigo = RegistroCodigo::orderByDesc('expires_at')->first();
+
+    if ($codigo && $codigo->expires_at->lt(Carbon::now())) {
+        $codigo->delete();
+        $codigo = null;
+    }
 
     if (! $codigo) {
+        RegistroCodigo::query()->delete();
         $codigo = RegistroCodigo::create([
             'codigo' => (string) random_int(100000, 999999),
             'expires_at' => Carbon::now()->addSeconds(15),

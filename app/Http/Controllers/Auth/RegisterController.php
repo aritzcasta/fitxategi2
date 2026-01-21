@@ -64,14 +64,16 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $validator = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:usuario,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'empresa_id' => ['required', 'integer', 'exists:empresa,id'],
             'fecha_fin' => ['required', 'date'],
             'codigo' => ['required', 'string'],
-        ])->after(function ($validator) use ($data) {
+        ]);
+
+        $validator->after(function ($validator) use ($data) {
             $codigo = $data['codigo'] ?? null;
 
             $valido = RegistroCodigo::where('codigo', $codigo)
@@ -81,7 +83,9 @@ class RegisterController extends Controller
             if (! $valido) {
                 $validator->errors()->add('codigo', 'El código de registro no es válido o ha caducado.');
             }
-        ]);
+        });
+
+        return $validator;
     }
 
     /**
