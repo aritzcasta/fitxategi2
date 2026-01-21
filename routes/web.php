@@ -13,14 +13,13 @@ function obtenerCodigoActual(): RegistroCodigo
 {
     RegistroCodigo::where('expires_at', '<', Carbon::now())->delete();
 
-    $codigo = RegistroCodigo::orderByDesc('expires_at')->first();
-
-    if ($codigo && $codigo->expires_at->lt(Carbon::now())) {
-        $codigo->delete();
-        $codigo = null;
+    if (RegistroCodigo::count() > 1) {
+        RegistroCodigo::query()->delete();
     }
 
-    if (! $codigo) {
+    $codigo = RegistroCodigo::first();
+
+    if (! $codigo || $codigo->expires_at->lte(Carbon::now())) {
         RegistroCodigo::query()->delete();
         $codigo = RegistroCodigo::create([
             'codigo' => (string) random_int(100000, 999999),
