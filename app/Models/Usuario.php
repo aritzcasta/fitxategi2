@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $table = 'usuario';
 
@@ -27,11 +28,17 @@ class Usuario extends Model
         'horas_extra',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $casts = [
         'activo' => 'boolean',
         'fecha_ini' => 'date',
         'fecha_fin' => 'date',
         'horas_extra' => 'decimal:2',
+        'password' => 'hashed',
     ];
 
     public function rol(): BelongsTo

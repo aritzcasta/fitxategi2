@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Empresa;
+use App\Models\Rol;
+use App\Models\Usuario;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +43,18 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        $empresas = Empresa::orderBy('nombre')->get();
+
+        return view('auth.register', compact('empresas'));
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -50,8 +64,11 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:usuario,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'empresa_id' => ['required', 'integer', 'exists:empresa,id'],
+            'fecha_fin' => ['required', 'date'],
+            'mac' => ['required', 'string', 'max:255', 'unique:usuario,mac'],
         ]);
     }
 
@@ -59,14 +76,20 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\Models\User
+     * @return \App\Models\Usuario
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
+        $rol = Rol::firstOrCreate(['nombre' => 'Usuario']);
+
+        return Usuario::create([
+            'nombre' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'rol_id' => $rol->id,
+            'empresa_id' => $data['empresa_id'],
+            'fecha_fin' => $data['fecha_fin'],
+            'mac' => $data['mac'],
         ]);
     }
 }
