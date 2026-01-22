@@ -15,10 +15,8 @@ Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
 Route::get('/codigo/actual', [CodigoController::class, 'actual'])->name('codigo.actual');
 
 Route::middleware('session.auth')->group(function () {
-    // Página de bienvenida
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    // Página de bienvenida (usar el mismo controlador que /home)
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('root');
 
     // Panel principal
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
