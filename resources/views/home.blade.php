@@ -50,9 +50,11 @@
                     <button type="submit" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 {{ $disabledPrincipal ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : ($esSalida ? 'bg-emerald-600 text-white hover:bg-emerald-500 focus:ring-emerald-500' : 'bg-indigo-600 text-white hover:bg-indigo-500 focus:ring-indigo-500') }}" {{ $disabledPrincipal ? 'disabled' : '' }}>
                         {{ $esSalida ? __('Desfichar') : __('Empezar') }}
                 </button>
-                    <a href="{{ route('codigo') }}" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-100">
-                        {{ __('Ver código') }}
-                    </a>
+                    @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
+                        <a href="{{ route('codigo') }}" class="inline-flex items-center px-6 py-3 rounded-md font-semibold text-sm uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-transparent text-gray-800 hover:bg-gray-200 hover:text-gray-800 focus:ring-indigo-500 dark:bg-transparent dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-100">
+                            {{ __('Ver código') }}
+                        </a>
+                    @endif
                 </div>
             </form>
         </div>

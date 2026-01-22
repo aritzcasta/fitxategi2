@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('fecha_original')->nullable();
             $table->time('hora_entrada')->nullable();
             $table->time('hora_salida')->nullable();
-            $table->string('estado')->nullable();
+            $table->enum('estado', ['a_tiempo', 'tarde', 'ausente'])->nullable();
             $table->timestamps();
         });
     }
