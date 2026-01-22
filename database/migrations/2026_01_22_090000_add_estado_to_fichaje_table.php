@@ -10,11 +10,13 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+{
+    if (!Schema::hasColumn('fichaje', 'estado')) {
         Schema::table('fichaje', function (Blueprint $table) {
             $table->enum('estado', ['a_tiempo', 'tarde', 'ausente'])->nullable()->after('hora_salida');
         });
     }
+}
 
     /**
      * Reverse the migrations.
