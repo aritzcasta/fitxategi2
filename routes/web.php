@@ -9,13 +9,12 @@ use App\Http\Controllers\PerfilController;
 // Rutas de autenticación (login, register, logout, etc.)
 Auth::routes();
 
-// Ver página del código actual (solo admin)
-Route::get('/codigo', [CodigoController::class, 'show'])->middleware('admin')->name('codigo');
-// Obtener el código actual en JSON (solo admin)
-Route::get('/codigo/actual', [CodigoController::class, 'actual'])->middleware('admin')->name('codigo.actual');
+// Ver página del código actual
+Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
+// Obtener el código actual en JSON
+Route::get('/codigo/actual', [CodigoController::class, 'actual'])->name('codigo.actual');
 
-
-Route::middleware(['session.auth', 'admin'])->group(function () {
+Route::middleware('session.auth')->group(function () {
     // Página de bienvenida
     Route::get('/', function () {
         return view('welcome');
