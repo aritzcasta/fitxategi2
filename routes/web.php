@@ -2,12 +2,17 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RecuperarContrasenaController;
 use App\Http\Controllers\CodigoController;
 use App\Http\Controllers\FichajeController;
 use App\Http\Controllers\PerfilController;
 
 // Rutas de autenticación (login, register, logout, etc.)
 Auth::routes();
+
+// Recuperar contraseña
+Route::get('/password', [RecuperarContrasenaController::class, 'showLinkRequestForm'])->name('Reset-password');
+Route::post('/password/email', [RecuperarContrasenaController::class, 'sendResetLinkEmail'])->name('password.email');
 
 // Ver página del código actual
 Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
