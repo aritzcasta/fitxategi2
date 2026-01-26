@@ -29,4 +29,8 @@ class AdminUserPanelController extends Controller
 
         return view('admin.userPanel',['users'=>$users]);
     }
+    public function store(Request $request)
+    {
+
+    }
 }

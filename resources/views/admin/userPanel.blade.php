@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
+<div x-data="{ showModal: false, search: '{{ request('search') }}' }">
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
         <div class="bg-white dark:bg-gray-800 shadow sticky top-0 z-10">
@@ -27,7 +27,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <!-- Search -->
-                    <div class="flex-1 max-w-md" x-data="{ search: '{{ request('search') }}' }">
+                    <div class="flex-1 max-w-md">
                         <form action="{{ route('userPanel.search') }}" method="GET" x-ref="searchForm">
                             <div class="relative">
                                 <input type="text"
@@ -61,7 +61,7 @@
                             </svg>
                             Filtros
                         </button>
-                        <button class="px-4 py-2 bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white rounded-lg flex items-center gap-2">
+                        <button @click="showModal = true" type="button" class="px-4 py-2 bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white rounded-lg flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
@@ -70,8 +70,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <!-- Users Table -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
@@ -88,30 +86,21 @@
                                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Rol
                                 </th>
-                                {{-- <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Estado
-                                </th> --}}
-
                                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Acciones
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                            <!-- Row 1 -->
-                             @if(isset($users))
-
-                                @foreach ($users as $user )
+                            @if(isset($users))
+                                @foreach ($users as $user)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600">
-                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
                                                     <div class="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            JD
+                                                            {{ strtoupper(substr($user->name, 0, 2)) }}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -119,15 +108,16 @@
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
                                                         {{$user->name}}
                                                     </div>
-                                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                        {{$user->email}}
-                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                {{$user->email}}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
                                             @if($user->role_id==3)
-
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
                                                     Admin
                                                 </span>
@@ -141,13 +131,6 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        {{-- <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-                                                Activo
-                                            </span>
-                                        </td> --}}
-
-
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex items-center gap-2">
                                                 <button class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
@@ -164,8 +147,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                @endif
-
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -182,46 +164,41 @@
                             <span class="font-medium">{{ $users->total() }}</span>
                             resultados
                         </div>
-                        <!-- Pagination buttons on the right -->
-        @if($users->hasPages())
-            <div class="flex gap-2">
-                {{-- Previous button --}}
-                @if ($users->onFirstPage())
-                    <span class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-400 cursor-not-allowed opacity-50">
-                        Anterior
-                    </span>
-                @else
-                    <a href="{{ $users->previousPageUrl() }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
-                        Anterior
-                    </a>
-                @endif
+                        @if($users->hasPages())
+                            <div class="flex gap-2">
+                                @if ($users->onFirstPage())
+                                    <span class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-400 cursor-not-allowed opacity-50">
+                                        Anterior
+                                    </span>
+                                @else
+                                    <a href="{{ $users->previousPageUrl() }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                        Anterior
+                                    </a>
+                                @endif
 
-                {{-- Page numbers --}}
-                @for ($i = 1; $i <= $users->lastPage(); $i++)
-                    @if ($i == $users->currentPage())
-                        <span class="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded-lg">
-                            {{ $i }}
-                        </span>
-                    @else
-                        <a href="{{ $users->url($i) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
-                            {{ $i }}
-                        </a>
-                    @endif
-                @endfor
+                                @for ($i = 1; $i <= $users->lastPage(); $i++)
+                                    @if ($i == $users->currentPage())
+                                        <span class="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded-lg">
+                                            {{ $i }}
+                                        </span>
+                                    @else
+                                        <a href="{{ $users->url($i) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                            {{ $i }}
+                                        </a>
+                                    @endif
+                                @endfor
 
-                {{-- Next button --}}
-                @if ($users->hasMorePages())
-                    <a href="{{ $users->nextPageUrl() }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
-                        Siguiente
-                    </a>
-                @else
-                    <span class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-400 cursor-not-allowed opacity-50">
-                        Siguiente
-                    </span>
-                @endif
-            </div>
-        @endif
-
+                                @if ($users->hasMorePages())
+                                    <a href="{{ $users->nextPageUrl() }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                        Siguiente
+                                    </a>
+                                @else
+                                    <span class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-400 cursor-not-allowed opacity-50">
+                                        Siguiente
+                                    </span>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -240,4 +217,97 @@
             @endif
         </div>
     </div>
+
+    <!-- Modal -->
+    <template x-if="showModal">
+        <div class="fixed inset-0 z-50 overflow-y-auto">
+            <!-- Backdrop -->
+            <div @click="showModal = false" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+
+            <!-- Modal Content -->
+            <div class="flex min-h-screen items-center justify-center p-4">
+                <div @click.stop
+                     class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6">
+
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Nuevo Usuario
+                        </h3>
+                        <button @click="showModal = false" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Form -->
+                    <form action="{{ route('userPanel.store') }}" method="POST">
+                        @csrf
+
+                        <!-- Name -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nombre
+                            </label>
+                            <input type="text"
+                                   name="name"
+                                   required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email
+                            </label>
+                            <input type="email"
+                                   name="email"
+                                   required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Contraseña
+                            </label>
+                            <input type="password"
+                                   name="password"
+                                   required
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <!-- Role -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Rol
+                            </label>
+                            <select name="role_id"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                                <option value="1">Usuario</option>
+                                <option value="2">Profesor</option>
+                                <option value="3">Admin</option>
+                            </select>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex gap-3 justify-end">
+                            <button type="button"
+                                    @click="showModal = false"
+                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                    class="px-4 py-2 bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white rounded-lg">
+                                Crear Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
 </div>
+@endsection
