@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 relative">
+    <form method="POST" action="{{ route('logout') }}" class="hidden sm:inline-flex absolute top-4 right-4">
+        @csrf
+        <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 transition focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            {{ __('Logout') }}
+        </button>
+    </form>
     <div class="w-full sm:max-w-md px-6 py-6 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg text-center">
         <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ __('Bienvenido') }}</h1>
 
@@ -14,6 +25,7 @@
         <p class="mt-4 text-gray-600 dark:text-gray-300">
             {{ __('Has iniciado sesión correctamente.') }}
         </p>
+
 
         <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
             @if ($yaEntrada)
@@ -58,6 +70,7 @@
                 </div>
             </form>
         </div>
+
     </div>
 
     <nav class="fixed bottom-0 left-0 right-0 sm:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
