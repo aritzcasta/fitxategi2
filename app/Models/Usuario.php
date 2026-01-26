@@ -41,6 +41,11 @@ class Usuario extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function isAdmin(): bool
+    {
+        return $this->rol && $this->rol->nombre === 'admin';
+    }
+
     public function rol(): BelongsTo
     {
         return $this->belongsTo(Rol::class, 'rol_id');
