@@ -14,6 +14,9 @@
         </button>
     </form>
     
+    @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
+        <a href="{{ route('admin.panel') }}" class="hidden sm:inline-flex absolute top-16 right-4 items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-500 transition shadow">Panel Admin</a>
+    @endif
     <div class="w-full max-w-lg px-6 py-10 bg-white dark:bg-gray-800 shadow-2xl overflow-hidden rounded-3xl text-center">
         @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
             <div class="absolute top-4 left-4">

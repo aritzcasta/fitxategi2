@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RecuperarContrasenaController;
 use App\Http\Controllers\CodigoController;
 use App\Http\Controllers\FichajeController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\PanelAdminController;
 
 // Rutas de autenticación (login, register, logout, etc.)
 Auth::routes();
@@ -16,6 +17,7 @@ Route::post('/password/email', [RecuperarContrasenaController::class, 'sendReset
 
 // Ver página del código actual
 Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
+
 // Obtener el código actual en JSON
 Route::get('/codigo/actual', [CodigoController::class, 'actual'])->name('codigo.actual');
 
@@ -28,6 +30,11 @@ Route::middleware('session.auth')->group(function () {
 
     // Perfil del usuario
     Route::get('/perfil', [PerfilController::class, 'show'])->name('perfil');
+
+    // Panel de administración (vacío por ahora) — solo accesible para usuarios autenticados
+    Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
+    // Lista de usuarios en panel admin
+    Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
 
     // Registrar entrada de fichaje
     Route::post('/fichaje/entrada', [FichajeController::class, 'entrada'])->name('fichaje.entrada');
