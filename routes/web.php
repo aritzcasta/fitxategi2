@@ -31,10 +31,16 @@ Route::middleware('session.auth')->group(function () {
     // Perfil del usuario
     Route::get('/perfil', [PerfilController::class, 'show'])->name('perfil');
 
-    // Panel de administración (vacío por ahora) — solo accesible para usuarios autenticados
-    Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
-    // Lista de usuarios en panel admin
-    Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
+    // Rutas de administración — requieren rol admin
+    Route::middleware(\App\Http\Middleware\RequireAdmin::class)->group(function () {
+        // Panel de administración
+        Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
+        // Lista de usuarios en panel admin
+        Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
+        // Empresas
+        Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
+        Route::get('/admin/empresas/{id}', [PanelAdminController::class, 'empresaShow'])->name('admin.empresas.show');
+    });
 
     // Registrar entrada de fichaje
     Route::post('/fichaje/entrada', [FichajeController::class, 'entrada'])->name('fichaje.entrada');

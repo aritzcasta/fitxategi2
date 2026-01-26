@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Fichaje;
 use Illuminate\Support\Carbon;
+use App\Models\Empresa;
 
 class PanelAdminController extends Controller
 {
@@ -51,5 +52,17 @@ class PanelAdminController extends Controller
         });
 
         return view('admin.usuarios', ['users' => $users]);
+    }
+
+    public function empresas()
+    {
+        $empresas = Empresa::all();
+        return view('admin.empresas', ['empresas' => $empresas]);
+    }
+
+    public function empresaShow($id)
+    {
+        $empresa = Empresa::with('usuarios.rol')->findOrFail($id);
+        return view('admin.empresa', ['empresa' => $empresa]);
     }
 }

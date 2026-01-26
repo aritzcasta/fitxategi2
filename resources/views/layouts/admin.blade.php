@@ -15,14 +15,14 @@
         {{-- Sidebar --}}
         <aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen">
             <div class="p-4 border-b border-gray-100 dark:border-gray-700">
-                <a href="{{ route('admin.panel') }}" class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ config('app.name') }}<span class="text-sm text-gray-500"> · Admin</span></a>
+                <a href="{{ route('admin.panel') }}" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Fitxategi<span class="text-sm text-gray-500"> · Admin</span></a>
             </div>
 
             <nav class="p-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="{{ route('admin.panel') }}" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <span>Dashboard</span>
+                        <a href="{{ route('admin.empresas') }}" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <span>Empresas</span>
                         </a>
                     </li>
                     <li>
