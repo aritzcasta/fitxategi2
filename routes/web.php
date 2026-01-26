@@ -37,7 +37,7 @@ Route::middleware('session.auth')->group(function () {
     Route::post('/fichaje/salida', [FichajeController::class, 'salida'])->name('fichaje.salida');
     Route::get('/users', [AdminUserPanelController::class, 'index'])->name('userPanel');
     Route::get('/users/search', [AdminUserPanelController::class, 'search'])->name('userPanel.search');
-    Route::get('/users/store', [AdminUserPanelController::class, 'store'])->name('userPanel.store');
+    Route::post('/users/store', [AdminUserPanelController::class, 'store'])->name('userPanel.store');
     /* Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
         // Gestión de usuarios, etc. (para futuro)
          Route::get('/users', [AdminUserPanelController::class, 'index'])->name('userPanel');
