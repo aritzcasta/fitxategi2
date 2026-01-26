@@ -29,6 +29,7 @@ class FichajeController extends Controller
             ['id_usuario' => $usuario->id, 'fecha' => $hoy],
             ['fecha_original' => $hoy]
         );
+        $wasCreated = $fichaje->wasRecentlyCreated;
 
         if ($fichaje->hora_entrada) {
             return back()->with('status', 'Ya has registrado la entrada hoy.');
@@ -36,6 +37,15 @@ class FichajeController extends Controller
 
         $fichaje->hora_entrada = Carbon::now()->format('H:i:s');
         $fichaje->save();
+
+        if ($wasCreated) {
+            // Increment the counter of times registered for the user
+            try {
+                $usuario->increment('veces_registradas');
+            } catch (\Throwable $e) {
+                // don't break the flow if increment fails; log could be added
+            }
+        }
 
         return back()->with('status', 'Entrada registrada correctamente.');
     }
