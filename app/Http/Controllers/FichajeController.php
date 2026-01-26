@@ -22,7 +22,7 @@ class FichajeController extends Controller
             ->exists();
 
         if (! $codigoValido) {
-            return back()->with('status', 'El código no es válido o ha caducado.');
+            return back()->with(['status' => 'El código no es válido o ha caducado.', 'error' => true]);
         }
 
         $fichaje = Fichaje::firstOrCreate(
@@ -51,7 +51,7 @@ class FichajeController extends Controller
             ->exists();
 
         if (! $codigoValido) {
-            return back()->with('status', 'El código no es válido o ha caducado.');
+            return back()->with(['status' => 'El código no es válido o ha caducado.', 'error' => true]);
         }
 
         $fichaje = Fichaje::where('id_usuario', $usuario->id)
