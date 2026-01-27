@@ -18,7 +18,17 @@ class PanelAdminController extends Controller
     {
         $hoy = Carbon::today();
 
-        $users = Usuario::with('rol')->get()->map(function ($user) use ($hoy) {
+        $q = request('q');
+
+        $users = Usuario::with('rol')
+            ->when($q, function ($query, $q) {
+                $query->where(function($sub) use ($q) {
+                    $sub->where('nombre', 'like', "%{$q}%")
+                        ->orWhere('email', 'like', "%{$q}%");
+                });
+            })
+            ->get()
+            ->map(function ($user) use ($hoy) {
             $fichajeHoy = Fichaje::where('id_usuario', $user->id)
                 ->whereDate('fecha', $hoy)
                 ->first();
@@ -51,18 +61,51 @@ class PanelAdminController extends Controller
             return $user;
         });
 
-        return view('admin.usuarios', ['users' => $users]);
+        return view('admin.usuarios', ['users' => $users, 'q' => $q]);
     }
 
     public function empresas()
     {
-        $empresas = Empresa::all();
-        return view('admin.empresas', ['empresas' => $empresas]);
+        $q = request('q');
+
+        $empresas = Empresa::when($q, function ($query, $q) {
+            $query->where('nombre', 'like', "%{$q}%");
+        })->get();
+
+        return view('admin.empresas', ['empresas' => $empresas, 'q' => $q]);
     }
 
     public function empresaShow($id)
     {
         $empresa = Empresa::with('usuarios.rol')->findOrFail($id);
         return view('admin.empresa', ['empresa' => $empresa]);
+    }
+
+    public function usuarioEdit($id)
+    {
+        $user = Usuario::findOrFail($id);
+        return view('admin.usuario_edit', ['user' => $user]);
+    }
+
+    public function usuarioUpdate(Request $request, $id)
+    {
+        $user = Usuario::findOrFail($id);
+
+        $data = $request->validate([
+            'email' => 'required|email|unique:usuario,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+            'fecha_fin' => 'nullable|date',
+        ]);
+
+        $user->email = $data['email'];
+
+        if (!empty($data['password'])) {
+            $user->password = $data['password'];
+        }
+
+        $user->fecha_fin = $data['fecha_fin'] ?? null;
+        $user->save();
+
+        return redirect()->route('admin.usuarios')->with('status', 'Usuario actualizado correctamente.');
     }
 }

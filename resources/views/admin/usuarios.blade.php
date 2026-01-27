@@ -12,15 +12,19 @@
                             <th class="py-2">Nombre</th>
                             <th class="py-2">Email</th>
                             <th class="py-2">Rol</th>
+                            <th class="py-2">Empresa</th>
                             <th class="py-2">Estado</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm text-gray-700 dark:text-gray-200">
                         @foreach($users as $user)
-                            <tr class="border-t border-gray-100 dark:border-gray-700">
-                                <td class="py-3">{{ $user->nombre }}</td>
+                            <tr class="border-t border-gray-100 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors duration-150">
+                                <td class="py-3">
+                                    <a href="{{ route('admin.usuarios.edit', $user->id) }}" class="text-indigo-600 hover:underline">{{ $user->nombre }}</a>
+                                </td>
                                 <td class="py-3">{{ $user->email }}</td>
                                 <td class="py-3">{{ $user->rol?->nombre }}</td>
+                                <td class="py-3">{{ $user->empresa?->nombre }}</td>
                                 <td class="py-3">
                                     @php
                                         $color = 'bg-red-500';

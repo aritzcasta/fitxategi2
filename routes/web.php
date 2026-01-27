@@ -37,6 +37,8 @@ Route::middleware('session.auth')->group(function () {
         Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
         // Lista de usuarios en panel admin
         Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
+        Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');
+        Route::patch('/admin/usuarios/{id}', [PanelAdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
         // Empresas
         Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
         Route::get('/admin/empresas/{id}', [PanelAdminController::class, 'empresaShow'])->name('admin.empresas.show');

@@ -16,6 +16,18 @@
     <!-- Tailwind (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <style>
+        /* Hacer el icono del selector de fecha más visible en fondos oscuros (WebKit) */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(2);
+        }
+        /* Opcional: mejorar visibilidad del indicador en otros navegadores si aplicable */
+        input[type="date"]::-ms-clear,
+        input[type="date"]::-ms-expand {
+            filter: invert(1) brightness(2);
+        }
+    </style>
+
     <!-- Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
