@@ -42,6 +42,9 @@ Route::middleware('session.auth')->group(function () {
         // Empresas
         Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
         Route::get('/admin/empresas/{id}', [PanelAdminController::class, 'empresaShow'])->name('admin.empresas.show');
+        // Exportar empresa (Excel / PDF)
+        Route::get('/admin/empresas/{id}/export/excel', [PanelAdminController::class, 'empresaExportExcel'])->name('admin.empresas.export.excel');
+        Route::get('/admin/empresas/{id}/export/pdf', [PanelAdminController::class, 'empresaExportPdf'])->name('admin.empresas.export.pdf');
     });
 
     // Registrar entrada de fichaje

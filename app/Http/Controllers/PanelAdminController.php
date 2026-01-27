@@ -7,6 +7,10 @@ use App\Models\Usuario;
 use App\Models\Fichaje;
 use Illuminate\Support\Carbon;
 use App\Models\Empresa;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\EmpresaExport;
+use Illuminate\Support\Str;
 
 class PanelAdminController extends Controller
 {
@@ -91,6 +95,49 @@ class PanelAdminController extends Controller
             ->get();
 
         return view('admin.empresa', ['empresa' => $empresa, 'usuarios' => $usuarios]);
+    }
+
+    public function empresaExportExcel($id)
+    {
+        $empresa = Empresa::with(['usuarios' => function ($q) {
+            $q->whereHas('rol', function($r) { $r->where('nombre', 'usuario'); })
+              ->withCount('fichajes')
+              ->with(['fichajes' => function ($q2) {
+                  $q2->latest('fecha')->limit(1);
+              }]);
+        }])->findOrFail($id);
+
+        $filename = 'empresa_'.Str::slug($empresa->nombre ?: $empresa->id).'.xlsx';
+        $usersParam = request('users');
+        return Excel::download(new EmpresaExport($empresa, $usersParam), $filename);
+    }
+
+    public function empresaExportPdf($id)
+    {
+        $empresa = Empresa::with(['usuarios' => function ($q) {
+            $q->whereHas('rol', function($r) { $r->where('nombre', 'usuario'); })
+              ->withCount('fichajes')
+              ->with(['fichajes' => function ($q2) {
+                  $q2->latest('fecha')->limit(1);
+              }]);
+        }])->findOrFail($id);
+
+        $usersParam = request('users');
+        if ($usersParam) {
+            // load specific users for PDF view
+            $ids = array_filter(array_map('intval', explode(',', (string)$usersParam)));
+            $usuarios = \App\Models\Usuario::whereIn('id', $ids)->where('empresa_id', $empresa->id)
+                ->whereHas('rol', function($r) { $r->where('nombre', 'usuario'); })
+                ->withCount('fichajes')
+                ->with(['fichajes' => function ($q2) { $q2->latest('fecha')->limit(1); }])
+                ->get();
+            $pdf = Pdf::loadView('admin.empresa_export_pdf', ['empresa' => $empresa, 'usuarios' => $usuarios]);
+        } else {
+            $pdf = Pdf::loadView('admin.empresa_export_pdf', ['empresa' => $empresa]);
+        }
+
+        $filename = 'empresa_'.Str::slug($empresa->nombre ?: $empresa->id).'.pdf';
+        return $pdf->download($filename);
     }
 
     public function usuarioEdit($id)
