@@ -46,6 +46,6 @@ class HomeController extends Controller
             }
         }
 
-        return view('home', compact('yaEntrada', 'yaSalida', 'puedeSalida', 'horaFin'));
+        return view('home', compact('yaEntrada', 'yaSalida', 'puedeSalida', 'horaFin', 'fichajeHoy'));
     }
 }
