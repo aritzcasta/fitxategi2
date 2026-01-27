@@ -77,8 +77,20 @@ class PanelAdminController extends Controller
 
     public function empresaShow($id)
     {
-        $empresa = Empresa::with('usuarios.rol')->findOrFail($id);
-        return view('admin.empresa', ['empresa' => $empresa]);
+        $empresa = Empresa::findOrFail($id);
+
+        // Obtener usuarios asociados que NO sean administradores (incluye usuarios sin rol)
+        $usuarios = $empresa->usuarios()
+            ->whereDoesntHave('rol', function ($q) {
+                $q->where('nombre', 'admin');
+            })
+            ->withCount('fichajes')
+            ->with(['fichajes' => function ($q) {
+                $q->latest('fecha')->limit(1);
+            }])
+            ->get();
+
+        return view('admin.empresa', ['empresa' => $empresa, 'usuarios' => $usuarios]);
     }
 
     public function usuarioEdit($id)

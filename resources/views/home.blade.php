@@ -101,6 +101,14 @@
                 @endif
             @endif
         </div>
+        
+        <!-- Botón Justificar falta -->
+        <div class="mt-4">
+            <button onclick="mostrarModalJustificar()" type="button" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-white font-semibold bg-gray-600 hover:bg-gray-700 transition shadow">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+                Justificar falta
+            </button>
+        </div>
     </div>
 
     <!-- Modal para ingresar código -->
@@ -130,6 +138,34 @@
                             class="flex-1 px-6 py-3 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-lg">
                         Confirmar
                     </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para justificar falta -->
+    <div id="modal-justificar" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md transform transition-all">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Justificar falta</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Describe la ausencia y, si quieres, adjunta una foto.</p>
+
+            <form id="form-justificar" method="POST" action="{{ route('fichaje.justificar') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Fecha (opcional)</label>
+                    <input type="date" name="fecha" class="w-full rounded-md border border-gray-200 px-3 py-2 bg-white text-gray-900">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Descripción</label>
+                    <textarea name="descripcion" required class="w-full rounded-md border border-gray-200 px-3 py-2 bg-white text-gray-900" rows="4" placeholder="Explica por qué no pudiste fichar..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Adjuntar foto (opcional)</label>
+                    <input type="file" name="foto" accept="image/*" class="w-full text-sm text-gray-600">
+                </div>
+                <div class="flex gap-3">
+                    <button type="button" onclick="cerrarModalJustificar()" class="flex-1 px-6 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition">Cancelar</button>
+                    <button type="submit" class="flex-1 px-6 py-3 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition">Enviar justificación</button>
                 </div>
             </form>
         </div>
@@ -191,6 +227,30 @@
     document.getElementById('modal-codigo').addEventListener('click', function(e) {
         if (e.target === this) {
             cerrarModalCodigo();
+        }
+    });
+
+    function mostrarModalJustificar() {
+        document.getElementById('modal-justificar').classList.remove('hidden');
+    }
+
+    function cerrarModalJustificar() {
+        document.getElementById('modal-justificar').classList.add('hidden');
+        const form = document.getElementById('form-justificar');
+        form.reset();
+    }
+
+    // Cerrar modal justificar con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarModalJustificar();
+        }
+    });
+
+    // Cerrar modal justificar al hacer clic fuera
+    document.getElementById('modal-justificar').addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarModalJustificar();
         }
     });
 </script>

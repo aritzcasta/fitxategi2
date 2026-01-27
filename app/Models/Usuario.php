@@ -27,6 +27,8 @@ class Usuario extends Authenticatable
     'fecha_fin',
     'horas_extra',
     'veces_registradas',
+    'faltas_justificadas',
+    'faltas_sin_justificar',
     ];
 
     protected $hidden = [
@@ -41,6 +43,8 @@ class Usuario extends Authenticatable
         'horas_extra' => 'decimal:2',
         'password' => 'hashed',
         'veces_registradas' => 'integer',
+        'faltas_justificadas' => 'integer',
+        'faltas_sin_justificar' => 'integer',
     ];
 
     public function isAdmin(): bool

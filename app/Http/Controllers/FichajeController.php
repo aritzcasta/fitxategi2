@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class FichajeController extends Controller
 {
@@ -89,5 +91,71 @@ class FichajeController extends Controller
         $fichaje->save();
 
         return back()->with('status', 'Salida registrada correctamente.');
+    }
+
+    public function justificar(Request $request): RedirectResponse
+    {
+        $usuario = Auth::user();
+        $hoy = Carbon::today();
+
+        $data = $request->validate([
+            'descripcion' => 'required|string|max:2000',
+            'foto' => 'nullable|image|max:4096',
+            'fecha' => 'nullable|date',
+        ]);
+
+        $fecha = isset($data['fecha']) ? Carbon::parse($data['fecha'])->startOfDay() : $hoy;
+
+        $fichaje = Fichaje::firstOrCreate(
+            ['id_usuario' => $usuario->id, 'fecha' => $fecha],
+            ['fecha_original' => $fecha]
+        );
+
+        // Estado previo para ajustar contadores
+        $wasAlreadyJustificado = (bool) $fichaje->justificado;
+        $wasSinJustificar = ($fichaje->estado === 'sin_justificar');
+
+        $fichaje->justificado = true;
+        $fichaje->justificacion = $data['descripcion'];
+        $fichaje->justificacion_estado = 'pending';
+
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+
+            $dir = public_path('imagenes/justificacion');
+            if (! File::exists($dir)) {
+                File::makeDirectory($dir, 0755, true);
+            }
+
+            $filename = Str::random(40) . '.' . $foto->getClientOriginalExtension();
+            $foto->move($dir, $filename);
+
+            // Guardamos la ruta relativa desde public para usar en vistas: "imagenes/justificacion/xxx.jpg"
+            $fichaje->justificacion_foto = 'imagenes/justificacion/' . $filename;
+        }
+
+        $fichaje->save();
+
+        // Si antes estuvo marcado como sin_justificar, decrementamos el contador de faltas sin justificar
+        if ($wasSinJustificar) {
+            try {
+                if ($usuario->faltas_sin_justificar > 0) {
+                    $usuario->decrement('faltas_sin_justificar');
+                }
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+
+        // Incrementar contador de faltas justificadas si antes no estaba justificado
+        if (! $wasAlreadyJustificado) {
+            try {
+                $usuario->increment('faltas_justificadas');
+            } catch (\Throwable $e) {
+                // no bloquear el flujo si falla
+            }
+        }
+
+        return back()->with('status', 'Justificación enviada. Quedará pendiente de revisión.');
     }
 }

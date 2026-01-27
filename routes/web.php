@@ -48,4 +48,6 @@ Route::middleware('session.auth')->group(function () {
     Route::post('/fichaje/entrada', [FichajeController::class, 'entrada'])->name('fichaje.entrada');
     // Registrar salida de fichaje
     Route::post('/fichaje/salida', [FichajeController::class, 'salida'])->name('fichaje.salida');
+    // Justificar falta (descripcion + foto opcional)
+    Route::post('/fichaje/justificar', [FichajeController::class, 'justificar'])->name('fichaje.justificar');
 });
