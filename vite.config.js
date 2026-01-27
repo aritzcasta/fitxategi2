@@ -8,7 +8,15 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/app.js',
             ],
-            refresh: true,
+            refresh: ['resources/**'],
         }),
     ],
+    server: {
+        hmr: {
+            overlay: false
+        },
+        watch: {
+            usePolling: true, // Important for Windows/UniServer
+        }
+    },
 });

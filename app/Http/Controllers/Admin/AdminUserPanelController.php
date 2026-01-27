@@ -12,7 +12,7 @@ class AdminUserPanelController extends Controller
 {
      public function index(Request $request)
     {
-        $users = Usuario::select('nombre','email','rol_id')->paginate(10);
+        $users = Usuario::select('id','nombre','email','rol_id')->paginate(10);
 
 
         return view('admin.userPanel', ['users'=>$users]);
@@ -35,22 +35,31 @@ class AdminUserPanelController extends Controller
     {
         $rules = [
             'nombre' => 'required|string',
-            'email' => 'required|string',
-            'password' => 'required|string|min:8',
+            'email' => 'required|string|',
+            'password' => 'required|string|min:8|confirmed',
             'rol_id' => 'required',
         ];
+        //email|unique:usuario,email
 
         // 1B Definir mensajes de error ('El campo precio debe ser numérico...')
         $messages = [
             'nombre.required' => 'El nombre de Usuario es obligatorio.',
             'email.required' => 'El email es obligatorio.',
+            'email.email' => 'El email debe ser válido.',
+            'email.unique' => 'Este email ya está registrado.',
             'password.min' => 'La contraseña debe contener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
         ];
         $data = $request->all();
+        //dd($data);
+
+
         $validator = Validator::make($data,$rules,$messages);
         if($validator->fails())
         {
+            //dd($validator);
             return redirect()->back()->withErrors($validator)->withInput();
+
         }
 
         $user = new Usuario();
@@ -58,10 +67,45 @@ class AdminUserPanelController extends Controller
         $user->email  = $data['email'];
         $user->password  = Hash::make($data['password']);
         $user->rol_id  = $data['rol_id'];
-        auth()->user()->usuario()->save();
+        //dd($user);
+        $user->save();
 
         session()->flash('success', 'Usuario creado correctamente');
         return redirect()->route('userPanel');
+
+    }
+    public function update(Request $request)
+    {
+        $id = $request->input('id');
+       dd($request);
+        $rules = [
+            'nombre' => 'required|string',
+            'email' => 'required|string|',
+            'password' => 'required|string|min:8|confirmed',
+            'rol_id' => 'required',
+        ];
+        //email|unique:usuario,email
+
+        // 1B Definir mensajes de error ('El campo precio debe ser numérico...')
+        $messages = [
+            'nombre.required' => 'El nombre de Usuario es obligatorio.',
+            'email.required' => 'El email es obligatorio.',
+            'email.email' => 'El email debe ser válido.',
+            'email.unique' => 'Este email ya está registrado.',
+            'password.min' => 'La contraseña debe contener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+        ];
+        $data = $request->all();
+        //dd($data);
+
+
+        $validator = Validator::make($data,$rules,$messages);
+        if($validator->fails())
+        {
+            //dd($validator);
+            return redirect()->back()->withErrors($validator)->withInput();
+
+        }
 
     }
 }

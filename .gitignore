@@ -22,3 +22,6 @@ yarn-error.log
 /.vscode
 /.zed
 package-lock.json
+
+vite.config.js
+package.json

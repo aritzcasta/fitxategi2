@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div x-data="{ showModal: false, search: '{{ request('search') }}' }">
+<div x-data="{ showModal: @json($errors->any()),showEditModal: false, search: '{{ request('search') }}' }">
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
         <div class="bg-white dark:bg-gray-800 shadow sticky top-0 z-10">
@@ -77,6 +77,7 @@
                     <table class="w-full">
                         <thead class="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                             <tr>
+
                                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Nombre
                                 </th>
@@ -97,35 +98,32 @@
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
+                                                {{-- <div class="flex-shrink-0 h-10 w-10">
                                                     <div class="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                                                             {{ strtoupper(substr($user->name, 0, 2)) }}
                                                         </span>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                        {{$user->name}}
+                                                        {{$user->nombre}}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-500 dark:text-gray-400">
                                                 {{$user->email}}
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($user->role_id==3)
+                                            @if($user->rol_id==1)
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
                                                     Admin
                                                 </span>
-                                            @elseif ($user->role_id==2)
-                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-                                                    Profesor
-                                                </span>
-                                            @elseif ($user->role_id==1)
+                                            @elseif ($user->rol_id==2)
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-700 text-green-800 dark:text-green-300">
                                                     Usuario
                                                 </span>
@@ -133,7 +131,13 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex items-center gap-2">
-                                                <button class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                                                <button  @click="editUser = {
+                                                    id: {{ $user->id }},
+                                                    nombre: '{{ $user->nombre }}',
+                                                    email: '{{ $user->email }}',
+                                                    rol_id: {{ $user->rol_id }}
+                                                }; showEditModal = true"
+                                                class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
@@ -245,13 +249,31 @@
                     <form action="{{ route('userPanel.store') }}" method="POST">
                         @csrf
 
+                        @if ($errors->any())
+                            <div class="mb-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg">
+                                <div class="flex">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium">Hay errores en el formulario:</p>
+                                        <ul class="mt-2 list-disc list-inside text-sm">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Name -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Nombre
                             </label>
                             <input type="text"
-                                   name="name"
+                                   name="nombre"
                                    required
                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
                         </div>
@@ -278,12 +300,22 @@
                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
                         </div>
 
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Confirmar Contraseña
+                            </label>
+                            <input type="password"
+                                name="password_confirmation"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
                         <!-- Role -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Rol
                             </label>
-                            <select name="role_id"
+                            <select name="rol_id"
                                     required
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
                                 <option value="1">Admin</option>
@@ -308,5 +340,128 @@
             </div>
         </div>
     </template>
+
+    <template x-if="showEditModal">
+        <div class="fixed inset-0 z-50 overflow-y-auto">
+            <!-- Backdrop -->
+            <div @click="showEditModal = false" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+
+            <!-- Modal Content -->
+            <div class="flex min-h-screen items-center justify-center p-4">
+                <div @click.stop
+                    class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6">
+
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Editar Usuario
+                        </h3>
+                        <button @click="showEditModal = false" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Form -->
+                    <form :action="{{ route('userPanel.update') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                         <input type="hidden" name="id" x-model="editUser.id">
+
+                        @if ($errors->any())
+                            <div class="mb-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg">
+                                <div class="flex">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium">Hay errores en el formulario:</p>
+                                        <ul class="mt-2 list-disc list-inside text-sm">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Name -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nombre
+                            </label>
+                            <input type="text"
+                                name="nombre"
+                                x-model="editUser.nombre"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email
+                            </label>
+                            <input type="email"
+                                name="email"
+                                x-model="editUser.email"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <!-- Password (Optional for editing) -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nueva Contraseña (dejar en blanco para mantener actual)
+                            </label>
+                            <input type="password"
+                                name="password"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Confirmar Nueva Contraseña
+                            </label>
+                            <input type="password"
+                                name="password_confirmation"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                        </div>
+
+                        <!-- Role -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Rol
+                            </label>
+                            <select name="rol_id"
+                                    x-model="editUser.rol_id"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent">
+                                <option value="1">Admin</option>
+                                <option value="2">Usuario</option>
+                            </select>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex gap-3 justify-end">
+                            <button type="button"
+                                    @click="showEditModal = false"
+                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                    class="px-4 py-2 bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white rounded-lg">
+                                Actualizar Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
 </div>
+
+
 @endsection
