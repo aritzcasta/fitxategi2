@@ -35,6 +35,8 @@ Route::middleware('session.auth')->group(function () {
     Route::middleware(\App\Http\Middleware\RequireAdmin::class)->group(function () {
         // Panel de administración
         Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
+        // Justificaciones (fichajes justificados)
+        Route::get('/admin/justificaciones', [PanelAdminController::class, 'justificaciones'])->name('admin.justificaciones');
         // Lista de usuarios en panel admin
         Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
         Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');

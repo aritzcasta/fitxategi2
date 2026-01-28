@@ -46,6 +46,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('admin.justificaciones') }}" class="flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium {{ request()->routeIs('admin.justificaciones') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h6l6 6v10a2 2 0 01-2 2z"></path></svg>
+                            <span>Justificaciones</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                             <span>Configuración</span>
@@ -103,6 +109,7 @@
                     <nav>
                         <a href="{{ route('admin.empresas') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200">Empresas</a>
                         <a href="{{ route('admin.usuarios') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200">Usuarios</a>
+                        <a href="{{ route('admin.justificaciones') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200">Justificaciones</a>
                     </nav>
                 </div>
             </header>

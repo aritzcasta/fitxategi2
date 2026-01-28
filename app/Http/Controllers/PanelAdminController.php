@@ -18,6 +18,32 @@ class PanelAdminController extends Controller
         return view('admin.panel');
     }
 
+    public function justificaciones(Request $request)
+    {
+        $desde = $request->query('desde');
+        $hasta = $request->query('hasta');
+
+        $justificaciones = Fichaje::query()
+            ->with(['usuario:id,nombre,email'])
+            ->where('justificado', true)
+            ->whereNotNull('justificacion')
+            ->when($desde, function ($query, $desde) {
+                $query->whereDate('fecha', '>=', Carbon::parse($desde)->startOfDay());
+            })
+            ->when($hasta, function ($query, $hasta) {
+                $query->whereDate('fecha', '<=', Carbon::parse($hasta)->endOfDay());
+            })
+            ->orderByDesc('fecha')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.justificaciones', [
+            'justificaciones' => $justificaciones,
+            'desde' => $desde,
+            'hasta' => $hasta,
+        ]);
+    }
+
     public function usuarios()
     {
         $hoy = Carbon::today();
