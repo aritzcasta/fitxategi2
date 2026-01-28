@@ -15,6 +15,15 @@
                     <p class="text-sm text-slate-600 dark:text-slate-400">Gestiona las empresas registradas en el sistema</p>
                 </div>
             </div>
+
+            <div class="mt-4 flex items-center justify-end">
+                <a href="{{ route('admin.crearempresas') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900 transition-all duration-200 shadow-md hover:shadow-lg">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+                    </svg>
+                    <span>Nueva empresa</span>
+                </a>
+            </div>
         </div>
 
         <!-- Grid de empresas -->

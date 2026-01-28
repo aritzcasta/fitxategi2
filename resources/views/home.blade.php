@@ -17,14 +17,15 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- Botón Ver Código - Visible para todos -->
-                <a href="{{ route('codigo') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-700 text-white hover:bg-slate-800 transition-all duration-200 shadow-md hover:shadow-lg">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    <span class="hidden md:inline">Ver Código</span>
-                </a>
+                @if (auth()->check() && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+                    <a href="{{ route('codigo') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-700 text-white hover:bg-slate-800 transition-all duration-200 shadow-md hover:shadow-lg">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span class="hidden md:inline">Ver Código</span>
+                    </a>
+                @endif
                 
                 @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
                     <a href="{{ route('admin.panel') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900 transition-all duration-200 shadow-md hover:shadow-lg">
@@ -68,6 +69,17 @@
                         </svg>
                     @endif
                     {{ session('status') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('warning'))
+            <div class="mb-6 px-6 py-4 rounded-2xl text-sm font-medium shadow-lg border bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.721-1.36 3.486 0l6.518 11.59c.75 1.334-.214 2.99-1.742 2.99H3.48c-1.528 0-2.492-1.656-1.742-2.99L8.257 3.1zM11 14a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    {{ session('warning') }}
                 </div>
             </div>
         @endif
@@ -315,16 +327,17 @@
                 <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-slate-700 dark:bg-slate-300 rounded-t-full"></div>
             </a>
 
-            <!-- Botón Código - Visible para todos -->
-            <a href="{{ route('codigo') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
-                <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                </div>
-                <span>Código</span>
-            </a>
+            @if (auth()->check() && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+                <a href="{{ route('codigo') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                    <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <span>Código</span>
+                </a>
+            @endif
 
             <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
                 <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fichaje;
+use App\Models\Festivo;
 use App\Models\RegistroCodigo;
+use App\Models\Usuario;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -16,6 +18,9 @@ class FichajeController extends Controller
     public function entrada(Request $request): RedirectResponse
     {
         $usuario = Auth::user();
+        if (! $usuario instanceof Usuario) {
+            abort(403, 'Acceso no autorizado.');
+        }
         $hoy = Carbon::today();
 
         $codigoIngresado = $request->input('codigo');
@@ -49,12 +54,27 @@ class FichajeController extends Controller
             }
         }
 
-        return back()->with('status', 'Entrada registrada correctamente.');
+        $manana = Carbon::today()->addDay();
+        $festivoManana = Festivo::query()->whereDate('fecha', $manana)->first();
+
+        $flash = ['status' => 'Entrada registrada correctamente.'];
+        if ($festivoManana) {
+            $texto = 'Aviso: mañana (' . $manana->format('Y-m-d') . ') es festivo.';
+            if (!empty($festivoManana->nombre)) {
+                $texto .= ' ' . $festivoManana->nombre;
+            }
+            $flash['warning'] = $texto;
+        }
+
+        return back()->with($flash);
     }
 
     public function salida(Request $request): RedirectResponse
     {
         $usuario = Auth::user();
+        if (! $usuario instanceof Usuario) {
+            abort(403, 'Acceso no autorizado.');
+        }
         $hoy = Carbon::today();
 
         $codigoIngresado = $request->input('codigo');
@@ -90,12 +110,27 @@ class FichajeController extends Controller
         $fichaje->hora_salida = Carbon::now()->format('H:i:s');
         $fichaje->save();
 
-        return back()->with('status', 'Salida registrada correctamente.');
+        $manana = Carbon::today()->addDay();
+        $festivoManana = Festivo::query()->whereDate('fecha', $manana)->first();
+
+        $flash = ['status' => 'Salida registrada correctamente.'];
+        if ($festivoManana) {
+            $texto = 'Aviso: mañana (' . $manana->format('Y-m-d') . ') es festivo.';
+            if (!empty($festivoManana->nombre)) {
+                $texto .= ' ' . $festivoManana->nombre;
+            }
+            $flash['warning'] = $texto;
+        }
+
+        return back()->with($flash);
     }
 
     public function justificar(Request $request): RedirectResponse
     {
         $usuario = Auth::user();
+        if (! $usuario instanceof Usuario) {
+            abort(403, 'Acceso no autorizado.');
+        }
         $hoy = Carbon::today();
 
         $data = $request->validate([

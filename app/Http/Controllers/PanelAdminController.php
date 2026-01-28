@@ -7,6 +7,7 @@ use App\Models\Usuario;
 use App\Models\Fichaje;
 use Illuminate\Support\Carbon;
 use App\Models\Empresa;
+use App\Models\Festivo;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\EmpresaExport;
@@ -42,6 +43,79 @@ class PanelAdminController extends Controller
             'desde' => $desde,
             'hasta' => $hasta,
         ]);
+    }
+
+    public function festivos()
+    {
+        $festivos = Festivo::query()->orderByDesc('fecha')->get();
+        return view('admin.festivos', ['festivos' => $festivos]);
+    }
+
+    public function festivosStore(Request $request)
+    {
+        // Soportar alta múltiple: fechas[] (varios inputs) o compatibilidad con fecha única
+        $data = $request->validate([
+            'fechas' => 'nullable|array|min:1',
+            'fechas.*' => 'required|date',
+            'fecha' => 'nullable|date',
+            'nombre' => 'nullable|string|max:255',
+        ]);
+
+        $fechas = [];
+        if (!empty($data['fechas'])) {
+            $fechas = $data['fechas'];
+        } elseif (!empty($data['fecha'])) {
+            $fechas = [$data['fecha']];
+        }
+
+        if (empty($fechas)) {
+            return redirect()->route('admin.festivos')
+                ->with('status', 'No se ha indicado ninguna fecha.');
+        }
+
+        $nombre = $data['nombre'] ?? null;
+        $created = 0;
+        $skipped = 0;
+
+        foreach ($fechas as $fecha) {
+            $dateString = Carbon::parse($fecha)->toDateString();
+            $festivo = Festivo::firstOrCreate(
+                ['fecha' => $dateString],
+                ['nombre' => $nombre]
+            );
+            if ($festivo->wasRecentlyCreated) {
+                $created++;
+            } else {
+                $skipped++;
+            }
+        }
+
+        $msg = 'Festivos guardados. Creados: ' . $created;
+        if ($skipped > 0) {
+            $msg .= ' · Omitidos (ya existían): ' . $skipped;
+        }
+
+        return redirect()->route('admin.festivos')->with('status', $msg);
+    }
+
+    public function festivosDestroyMany(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        $deleted = Festivo::query()->whereIn('id', $data['ids'])->delete();
+
+        return redirect()->route('admin.festivos')->with('status', 'Festivos eliminados: ' . $deleted);
+    }
+
+    public function festivosDestroy($id)
+    {
+        $festivo = Festivo::findOrFail($id);
+        $festivo->delete();
+
+        return redirect()->route('admin.festivos')->with('status', 'Festivo eliminado correctamente.');
     }
 
     public function usuarios()
@@ -106,6 +180,25 @@ class PanelAdminController extends Controller
         })->get();
 
         return view('admin.empresas', ['empresas' => $empresas, 'q' => $q]);
+    }
+
+    public function empresaCreate()
+    {
+        return view('admin.empresa_create');
+    }
+
+    public function empresaStore(Request $request)
+    {
+        $data = $request->validate([
+            'nombre' => 'required|string|max:255|unique:empresa,nombre',
+        ]);
+
+        $empresa = Empresa::create([
+            'nombre' => $data['nombre'],
+        ]);
+
+        return redirect()->route('admin.empresas.show', $empresa->id)
+            ->with('status', 'Empresa creada correctamente.');
     }
 
     public function empresaShow($id)
