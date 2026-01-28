@@ -51,6 +51,9 @@ class PanelAdminController extends Controller
         $q = request('q');
 
         $users = Usuario::with('rol')
+            ->whereHas('rol', function ($r) {
+                $r->where('nombre', 'usuario');
+            })
             ->when($q, function ($query, $q) {
                 $query->where(function($sub) use ($q) {
                     $sub->where('nombre', 'like', "%{$q}%")
