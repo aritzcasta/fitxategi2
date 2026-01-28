@@ -63,6 +63,20 @@
 				</div>
 				<p class="text-xs text-amber-500 dark:text-amber-400">Revisar ausencias justificadas</p>
 			</a>
+
+			<!-- Festivos -->
+			<a href="{{ route('admin.festivos') }}" class="group bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-900/20 rounded-2xl border-2 border-emerald-200 dark:border-emerald-800 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+				<div class="flex items-center gap-4 mb-3">
+					<div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+						<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+					</div>
+					<div>
+						<p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Gestionar</p>
+						<p class="text-2xl font-bold text-emerald-900 dark:text-emerald-100">Festivos</p>
+					</div>
+				</div>
+				<p class="text-xs text-emerald-600 dark:text-emerald-400">Crear y borrar días festivos</p>
+			</a>
 		</div>
 
 		<!-- Información adicional -->
@@ -75,9 +89,10 @@
 					<p class="font-semibold text-slate-800 dark:text-slate-200 mb-2">Guía de navegación</p>
 					<ul class="text-sm text-slate-600 dark:text-slate-400 space-y-1">
 						<li>• Usa la barra lateral para acceder a las diferentes secciones</li>
-						<li>• En "Empresas" puedes ver, crear y editar las empresas del sistema</li>
+						<li>• En "Empresas" puedes ver, creareditar las empresas del sistema</li>
 						<li>• En "Usuarios" puedes gestionar los usuarios y sus permisos</li>
 						<li>• En "Justificaciones" puedes revisar las ausencias reportadas</li>
+						<li>• En "Festivos" puedes marcar días festivos para el aviso al fichar</li>
 					</ul>
 				</div>
 			</div>
