@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-100 dark:from-slate-900 dark:via-gray-900 dark:to-zinc-900 relative py-8 px-4">
-    
+
     <!-- Barra superior -->
     <div class="max-w-5xl mx-auto mb-8">
         <div class="flex items-center justify-between bg-white dark:bg-gray-800 rounded-2xl shadow-lg px-6 py-4 border border-gray-100 dark:border-gray-700">
@@ -15,7 +15,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ now()->locale('es')->isoFormat('dddd, D MMMM YYYY') }}</p>
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-2">
                 @if (auth()->check() && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
                     <a href="{{ route('codigo') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-700 text-white hover:bg-slate-800 transition-all duration-200 shadow-md hover:shadow-lg">
@@ -26,7 +26,7 @@
                         <span class="hidden md:inline">Ver Código</span>
                     </a>
                 @endif
-                
+
                 @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
                     <a href="{{ route('admin.panel') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900 transition-all duration-200 shadow-md hover:shadow-lg">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -38,7 +38,7 @@
                         <span class="hidden md:inline">Admin</span>
                     </a>
                 @endif
-                
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm">
@@ -101,7 +101,7 @@
             <div class="bg-gradient-to-r from-slate-700 to-slate-800 px-8 py-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-2xl font-bold text-white mb-1">Panel de Fichaje</h2>
+                        <h2 class="text-2xl font-bold text-white mb-1">Fichaje</h2>
                         <p class="text-slate-300 text-sm">Gestiona tu jornada laboral</p>
                     </div>
                     <div class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl {{ $yaEntrada && !$yaSalida ? 'bg-emerald-500/20 border border-emerald-400/30' : 'bg-slate-600/30 border border-slate-500/30' }}">
@@ -146,7 +146,7 @@
                         </button>
                     @elseif (!$yaEntrada || $yaSalida)
                         <!-- Botón Iniciar -->
-                        <button onclick="mostrarModalCodigo('iniciar')" 
+                        <button onclick="mostrarModalCodigo('iniciar')"
                                 type="button"
                                 class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-5 rounded-2xl text-white font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 hover:from-slate-800 hover:via-slate-900 hover:to-black">
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 group-hover:translate-x-full transition-all duration-1000"></div>
@@ -158,7 +158,7 @@
                         </button>
                     @else
                         <!-- Botón Pausa -->
-                        <button id="btn-pausa" 
+                        <button id="btn-pausa"
                                 type="button"
                                 class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
                             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -170,7 +170,7 @@
                         </button>
 
                         <!-- Botón Finalizar -->
-                        <button onclick="mostrarModalCodigo('finalizar')" 
+                        <button onclick="mostrarModalCodigo('finalizar')"
                                 type="button"
                                 class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-5 rounded-2xl text-white font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 hover:from-slate-800 hover:via-slate-900 hover:to-black">
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 group-hover:translate-x-full transition-all duration-1000"></div>
@@ -198,13 +198,13 @@
                         <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
                     </div>
                     <div class="relative flex justify-center text-xs">
-                        <span class="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium">Gestión</span>
+                        <span class="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium"></span>
                     </div>
                 </div>
 
                 <!-- Botón Justificar -->
                 <button @if (!empty($esNoLaborable)) disabled @else onclick="mostrarModalJustificar()" @endif
-                        type="button" 
+                        type="button"
                         class="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-200 border-2 {{ !empty($esNoLaborable) ? 'text-gray-400 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 cursor-not-allowed opacity-80' : 'text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500' }}">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -244,18 +244,18 @@
                         </svg>
                         <span class="text-sm font-medium text-amber-700 dark:text-amber-400">Código válido por 15 segundos</span>
                     </div>
-                    <input type="text" 
-                           name="codigo" 
-                           id="input-codigo" 
+                    <input type="text"
+                           name="codigo"
+                           id="input-codigo"
                            class="w-full px-6 py-5 text-center text-3xl font-bold rounded-2xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition tracking-[0.5em]"
                            placeholder="000000"
                            maxlength="6"
                            required
                            autofocus>
                 </div>
-                
+
                 <div class="flex gap-3">
-                    <button type="button" 
+                    <button type="button"
                             onclick="cerrarModalCodigo()"
                             class="flex-1 px-6 py-4 rounded-xl font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 border-2 border-gray-200 dark:border-gray-600">
                         Cancelar
@@ -293,39 +293,39 @@
                 <div class="space-y-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fecha <span class="text-gray-400">(opcional)</span></label>
-                        <input type="date" 
-                               name="fecha" 
+                        <input type="date"
+                               name="fecha"
                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Descripción <span class="text-red-500">*</span></label>
-                        <textarea name="descripcion" 
-                                  required 
-                                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition resize-none" 
-                                  rows="4" 
+                        <textarea name="descripcion"
+                                  required
+                                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition resize-none"
+                                  rows="4"
                                   placeholder="Explica detalladamente el motivo de tu ausencia..."></textarea>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Adjuntar Documento <span class="text-gray-400">(opcional)</span></label>
                         <div class="relative">
-                            <input type="file" 
-                                   name="foto" 
-                                   accept="image/*" 
+                            <input type="file"
+                                   name="foto"
+                                   accept="image/*"
                                    class="w-full text-sm text-gray-600 dark:text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 dark:file:bg-slate-700 dark:file:text-slate-200 dark:hover:file:bg-slate-600 cursor-pointer transition-all">
                         </div>
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Formatos permitidos: JPG, PNG, PDF (máx. 5MB)</p>
                     </div>
                 </div>
-                
+
                 <div class="flex gap-3 mt-8">
-                    <button type="button" 
-                            onclick="cerrarModalJustificar()" 
+                    <button type="button"
+                            onclick="cerrarModalJustificar()"
                             class="flex-1 px-6 py-4 rounded-xl font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 border-2 border-gray-200 dark:border-gray-600">
                         Cancelar
                     </button>
-                    <button type="submit" 
+                    <button type="submit"
                             class="flex-1 px-6 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 transition-all duration-200 shadow-lg hover:shadow-xl">
                         Enviar
                     </button>
@@ -337,8 +337,8 @@
     <!-- Navegación móvil -->
     <nav class="fixed bottom-0 left-0 right-0 sm:hidden bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700 shadow-2xl backdrop-blur-lg z-40">
         <div class="flex items-center justify-around py-2">
-            <a href="{{ route('home') }}" class="flex flex-col items-center py-2 px-4 text-xs font-semibold text-slate-700 dark:text-slate-300 relative">
-                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-1 transition-colors">
+            <a href="{{ route('home') }}" class="flex flex-col items-center py-2 px-4 text-xs font-semibold text-slate-700 dark:text-slate-300 relative ">
+                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-1 transition-colors border-4 border-indigo-500">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
                     </svg>
@@ -359,14 +359,18 @@
                 </a>
             @endif
 
-            <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
-                <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
-                </div>
-                <span>Perfil</span>
-            </a>
+            <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium transition-colors {{ request()->routeIs('perfil') ? 'text-slate-700 dark:text-slate-200' : 'text-gray-600 dark:text-gray-400 hover:text-slate-700' }}">
+    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-1 transition-colors border-2
+        {{ request()->routeIs('perfil')
+            ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg border-indigo-700'
+            : 'bg-gray-100 dark:bg-gray-700 border-transparent hover:bg-slate-200 dark:hover:bg-slate-600' }}">
+
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+    </div>
+    <span>Perfil</span>
+</a>
 
             @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
                 <a href="{{ route('admin.panel') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
@@ -389,29 +393,29 @@
     function mostrarModalCodigo(accion) {
         const modal = document.getElementById('modal-codigo');
         const form = document.getElementById('form-codigo');
-        
+
         if (accion === 'iniciar') {
             form.action = '{{ route("fichaje.entrada") }}';
         } else if (accion === 'finalizar') {
             form.action = '{{ route("fichaje.salida") }}';
         }
-        
+
         modal.classList.remove('hidden');
         document.getElementById('input-codigo').focus();
     }
-    
+
     function cerrarModalCodigo() {
         document.getElementById('modal-codigo').classList.add('hidden');
         document.getElementById('input-codigo').value = '';
     }
-    
+
     // Cerrar modal con Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             cerrarModalCodigo();
         }
     });
-    
+
     // Cerrar modal al hacer clic fuera
     document.getElementById('modal-codigo').addEventListener('click', function(e) {
         if (e.target === this) {
