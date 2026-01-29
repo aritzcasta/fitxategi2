@@ -9,8 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PanelAdminController;
 
 // Rutas de autenticación (login, register, logout, etc.)
-// Habilitar verificación de email para completar el registro.
-Auth::routes(['verify' => true]);
+Auth::routes();
 
 // Recuperar contraseña
 Route::get('/password', [RecuperarContrasenaController::class, 'showLinkRequestForm'])->name('Reset-password');

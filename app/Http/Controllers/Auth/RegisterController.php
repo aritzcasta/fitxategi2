@@ -7,7 +7,6 @@ use App\Models\Empresa;
 use App\Models\Rol;
 use App\Models\Usuario;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -92,15 +91,5 @@ class RegisterController extends Controller
             'empresa_id' => $data['empresa_id'],
             'fecha_fin' => $data['fecha_fin'],
         ]);
-    }
-
-    protected function registered(Request $request, $user)
-    {
-        if (method_exists($user, 'sendEmailVerificationNotification')) {
-            $user->sendEmailVerificationNotification();
-        }
-
-        return redirect()->route('verification.notice')
-            ->with('status', 'Te hemos enviado un correo con un enlace para terminar el registro.');
     }
 }
