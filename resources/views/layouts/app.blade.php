@@ -16,6 +16,8 @@
     <!-- Tailwind (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- alpine -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         /* Hacer el icono del selector de fecha más visible en fondos oscuros (WebKit) */
         input[type="date"]::-webkit-calendar-picker-indicator {

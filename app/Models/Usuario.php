@@ -7,12 +7,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Usuario extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, MustVerifyEmailTrait;
+    use HasFactory, Notifiable, SoftDeletes,MustVerifyEmailTrait;
+
 
     protected $table = 'usuario';
 
@@ -52,7 +54,7 @@ class Usuario extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin(): bool
     {
-        return $this->rol && $this->rol->nombre === 'admin';
+        return $this->rol && $this->rol->nombre === 'Administrador';
     }
 
     public function rol(): BelongsTo

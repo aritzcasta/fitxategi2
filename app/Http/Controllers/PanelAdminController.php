@@ -316,4 +316,20 @@ class PanelAdminController extends Controller
 
         return redirect()->route('admin.usuarios')->with('status', 'Usuario actualizado correctamente.');
     }
+    public function usuarioDestroy(Request $request, $id)
+    {
+        //soft delete
+        $user = Usuario::findOrFail($id);
+
+        $user->delete();
+        return redirect()->route('admin.usuarios')->with('status', 'Usuario eliminado correctamente');
+    }
+     public function usuarioKill(Request $request, $id)
+    {
+        //soft delete
+        $user = Usuario::findOrFail($id);
+
+        $user->forceDelete();
+        return redirect()->route('admin.usuarios')->with('status', 'Usuario eliminado correctamente');
+    }
 }
