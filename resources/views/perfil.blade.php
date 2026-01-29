@@ -46,7 +46,7 @@
                             {{ $horasRestantes !== null ? $horasRestantes : '—' }}
                         </p>
                         <p class="text-xs text-slate-500 dark:text-slate-400">
-                            Calculado con 8h/día hasta {{ $usuario->fecha_fin ? $usuario->fecha_fin->format('d/m/Y') : 'sin fecha' }}
+                            Calculado con 7h/día hasta {{ $usuario->fecha_fin ? $usuario->fecha_fin->format('d/m/Y') : 'sin fecha' }}
                         </p>
                     </div>
 
@@ -141,4 +141,55 @@
         </div>
     </div>
 </div>
+
+@section('mobile-nav')
+<!-- Navegación móvil -->
+<nav class="fixed bottom-0 left-0 right-0 sm:hidden bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700 shadow-2xl backdrop-blur-lg z-40">
+    <div class="flex items-center justify-around py-2">
+        <a href="{{ route('home') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                </svg>
+            </div>
+            <span>Inicio</span>
+        </a>
+
+        @if (auth()->check() && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+            <a href="{{ route('codigo') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <span>Código</span>
+            </a>
+        @endif
+
+        <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-semibold text-slate-700 dark:text-slate-300 relative">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-1 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            </div>
+            <span>Perfil</span>
+            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-slate-700 dark:bg-slate-300 rounded-t-full"></div>
+        </a>
+
+        @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
+            <a href="{{ route('admin.panel') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </div>
+                <span>Admin</span>
+            </a>
+        @endif
+    </div>
+</nav>
 @endsection

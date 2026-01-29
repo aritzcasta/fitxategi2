@@ -38,6 +38,8 @@
         <main>
             @yield('content')
         </main>
+
+        @yield('mobile-nav')
     </div>
 </body>
 </html>

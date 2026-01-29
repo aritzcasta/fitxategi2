@@ -26,7 +26,7 @@ class PerfilController extends Controller
         $horasRestantes = null;
         if ($usuario->fecha_fin) {
             $diasRestantes = max(0, Carbon::today()->diffInDays($usuario->fecha_fin, false));
-            $horasRestantes = $diasRestantes * 8;
+            $horasRestantes = $diasRestantes * 7;
         }
 
         return view('perfil', compact('usuario', 'incidencias', 'llegadasTarde', 'horasRestantes'));

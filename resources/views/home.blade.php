@@ -157,18 +157,6 @@
                             <span class="relative z-10">Iniciar Jornada</span>
                         </button>
                     @else
-                        <!-- Botón Pausa -->
-                        <button id="btn-pausa"
-                                type="button"
-                                class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                                <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                                <rect x="8" y="7" width="3" height="10" rx="1" fill="white"/>
-                                <rect x="13" y="7" width="3" height="10" rx="1" fill="white"/>
-                            </svg>
-                            <span>Pausar</span>
-                        </button>
-
                         <!-- Botón Finalizar -->
                         <button onclick="mostrarModalCodigo('finalizar')"
                                 type="button"
