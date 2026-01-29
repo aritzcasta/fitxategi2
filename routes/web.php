@@ -9,7 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PanelAdminController;
 
 // Rutas de autenticación (login, register, logout, etc.)
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // Recuperar contraseña
 Route::get('/password', [RecuperarContrasenaController::class, 'showLinkRequestForm'])->name('Reset-password');
@@ -17,7 +17,7 @@ Route::post('/password/email', [RecuperarContrasenaController::class, 'sendReset
 
 
 
-Route::middleware('session.auth')->group(function () {
+Route::middleware(['session.auth', 'verified'])->group(function () {
     // Página de bienvenida (usar el mismo controlador que /home)
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('root');
 
