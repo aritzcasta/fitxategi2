@@ -19,7 +19,7 @@
                             <p class="text-slate-300 text-sm">{{ $usuario->nombre }}</p>
                         </div>
                     </div>
-                    <a href="{{ route('home') }}" 
+                    <a href="{{ route('home') }}"
                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-all duration-200 shadow-md">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -168,7 +168,7 @@
         @endif
 
         <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-semibold text-slate-700 dark:text-slate-300 relative">
-            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-1 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-1 transition-colors border-4 border-blue-500">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>

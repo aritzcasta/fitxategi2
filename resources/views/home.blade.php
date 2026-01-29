@@ -157,6 +157,18 @@
                             <span class="relative z-10">Iniciar Jornada</span>
                         </button>
                     @else
+                        <!-- Botón Pausa -->
+                        <button id="btn-pausa"
+                                type="button"
+                                class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                                <rect x="8" y="7" width="3" height="10" rx="1" fill="white"/>
+                                <rect x="13" y="7" width="3" height="10" rx="1" fill="white"/>
+                            </svg>
+                            <span>Pausar</span>
+                        </button>
+
                         <!-- Botón Finalizar -->
                         <button onclick="mostrarModalCodigo('finalizar')"
                                 type="button"
@@ -347,18 +359,18 @@
                 </a>
             @endif
 
-            <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium transition-colors {{ request()->routeIs('perfil') ? 'text-slate-700 dark:text-slate-200' : 'text-gray-600 dark:text-gray-400 hover:text-slate-700' }}">
-    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-1 transition-colors border-2
-        {{ request()->routeIs('perfil')
-            ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg border-indigo-700'
-            : 'bg-gray-100 dark:bg-gray-700 border-transparent hover:bg-slate-200 dark:hover:bg-slate-600' }}">
+                <a href="{{ route('perfil') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium transition-colors {{ request()->routeIs('perfil') ? 'text-slate-700 dark:text-slate-200' : 'text-gray-600 dark:text-gray-400 hover:text-slate-700' }}">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-1 transition-colors border-2
+            {{ request()->routeIs('perfil')
+                ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg border-indigo-700'
+                : 'bg-gray-100 dark:bg-gray-700 border-transparent hover:bg-slate-200 dark:hover:bg-slate-600' }}">
 
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-        </svg>
-    </div>
-    <span>Perfil</span>
-</a>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+        </div>
+        <span>Perfil</span>
+    </a>
 
             @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
                 <a href="{{ route('admin.panel') }}" class="flex flex-col items-center py-2 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
