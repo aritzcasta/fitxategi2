@@ -37,13 +37,17 @@ Route::middleware('session.auth')->group(function () {
     Route::middleware(\App\Http\Middleware\RequireAdmin::class)->group(function () {
         // Panel de administración
         Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
+        Route::delete('/admin/usuarios/kill/{id}',[PanelAdminController::class, 'usuarioKill'])->name('admin.usuarios.kill');
         // Lista de usuarios en panel admin
         Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
         Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');
         Route::patch('/admin/usuarios/{id}', [PanelAdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
+        Route::delete('/admin/usuarios/{id}',[PanelAdminController::class, 'usuarioDestroy'])->name('admin.usuarios.destroy');
+
         // Empresas
         Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
         Route::get('/admin/empresas/{id}', [PanelAdminController::class, 'empresaShow'])->name('admin.empresas.show');
+
     });
 
     // Registrar entrada de fichaje

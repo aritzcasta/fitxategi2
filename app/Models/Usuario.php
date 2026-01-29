@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Usuario extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'usuario';
 
@@ -45,7 +46,7 @@ class Usuario extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->rol && $this->rol->nombre === 'admin';
+        return $this->rol && $this->rol->nombre === 'Administrador';
     }
 
     public function rol(): BelongsTo

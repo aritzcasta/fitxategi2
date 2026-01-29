@@ -46,6 +46,14 @@
                     <button class="bg-indigo-600 text-white px-4 py-2 rounded-md">Guardar</button>
                     <a href="{{ route('admin.usuarios') }}" class="text-sm text-gray-600 dark:text-gray-300">Cancelar</a>
                 </div>
+
+                <form method="POST" action="{{ route('admin.usuarios.destroy', $user->id) }}" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');" class="mt-4">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white mt-4 px-4 py-2 rounded-md">Eliminar usuario</button>
+                </form>
+
+
                 </form>
             </div>
         </div>
