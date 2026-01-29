@@ -79,7 +79,7 @@
 			</a>
 		</div>
 
-	
+
 
 		<div class="mt-6">
 			@yield('admin.content')

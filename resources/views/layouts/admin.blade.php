@@ -44,25 +44,25 @@
             <nav class="p-4 flex-1">
                 <ul class="space-y-2">
                     <li>
-                        <a href="{{ route('admin.empresas') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.empresas') ? 'bg-slate-700 text-white shadow-lg' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span>Empresas</span>
+                        <a href="{{ route('admin.empresas') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.empresas') ? 'bg-slate-700 text-white shadow-lg border-2 border-blue-500' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-transparent' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                <span>Empresas</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.usuarios') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.usuarios') ? 'bg-slate-700 text-white shadow-lg' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                        <a href="{{ route('admin.usuarios') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.usuarios') ? 'bg-slate-700 text-white shadow-lg border-2 border-indigo-700' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                             <span>Usuarios</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.justificaciones') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.justificaciones') ? 'bg-slate-700 text-white shadow-lg' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                        <a href="{{ route('admin.justificaciones') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.justificaciones') ? 'bg-slate-700 text-white shadow-lg border-2 border-orange-700 ' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             <span>Justificaciones</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.festivos') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.festivos') ? 'bg-slate-700 text-white shadow-lg' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                        <a href="{{ route('admin.festivos') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.festivos') ? 'bg-slate-700 text-white shadow-lg border-2 border-red-700' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             <span>Festivos</span>
                         </a>
