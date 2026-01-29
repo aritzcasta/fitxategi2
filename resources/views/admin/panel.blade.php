@@ -89,10 +89,10 @@
 					<p class="font-semibold text-slate-800 dark:text-slate-200 mb-2">Guía de navegación</p>
 					<ul class="text-sm text-slate-600 dark:text-slate-400 space-y-1">
 						<li>• Usa la barra lateral para acceder a las diferentes secciones</li>
-						<li>• En "Empresas" puedes ver, creareditar las empresas del sistema</li>
-						<li>• En "Usuarios" puedes gestionar los usuarios y sus permisos</li>
-						<li>• En "Justificaciones" puedes revisar las ausencias reportadas</li>
-						<li>• En "Festivos" puedes marcar días festivos para el aviso al fichar</li>
+						<li>• En "Empresas" puedes ver, crear, editar las empresas del sistema y exportar los datos de los usuarios afiliados</li>
+						<li>• En "Usuarios" puedes gestionar los usuarios y sus credenciales</li>
+						<li>• En "Justificaciones" puedes revisar las ausencias reportadas y darlas de alta o denegar</li>
+						<li>• En "Festivos" puedes marcar días festivos para el aviso al fichar y que no sea necesario fichar esos dias</li>
 					</ul>
 				</div>
 			</div>

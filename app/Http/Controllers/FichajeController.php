@@ -23,6 +23,16 @@ class FichajeController extends Controller
         }
         $hoy = Carbon::today();
 
+        $festivoHoy = Festivo::query()->whereDate('fecha', $hoy)->first();
+        if ($hoy->isWeekend() || $festivoHoy) {
+            $motivo = $hoy->isWeekend() ? 'fin de semana' : 'festivo';
+            $texto = 'Hoy (' . $hoy->format('Y-m-d') . ') es ' . $motivo . '. No se puede fichar.';
+            if ($festivoHoy && !empty($festivoHoy->nombre)) {
+                $texto .= ' ' . $festivoHoy->nombre;
+            }
+            return back()->with(['status' => $texto, 'error' => true]);
+        }
+
         $codigoIngresado = $request->input('codigo');
         $codigoValido = RegistroCodigo::where('codigo', $codigoIngresado)
             ->where('expires_at', '>=', Carbon::now())
@@ -76,6 +86,16 @@ class FichajeController extends Controller
             abort(403, 'Acceso no autorizado.');
         }
         $hoy = Carbon::today();
+
+        $festivoHoy = Festivo::query()->whereDate('fecha', $hoy)->first();
+        if ($hoy->isWeekend() || $festivoHoy) {
+            $motivo = $hoy->isWeekend() ? 'fin de semana' : 'festivo';
+            $texto = 'Hoy (' . $hoy->format('Y-m-d') . ') es ' . $motivo . '. No se puede fichar.';
+            if ($festivoHoy && !empty($festivoHoy->nombre)) {
+                $texto .= ' ' . $festivoHoy->nombre;
+            }
+            return back()->with(['status' => $texto, 'error' => true]);
+        }
 
         $codigoIngresado = $request->input('codigo');
         $codigoValido = RegistroCodigo::where('codigo', $codigoIngresado)
@@ -140,6 +160,16 @@ class FichajeController extends Controller
         ]);
 
         $fecha = isset($data['fecha']) ? Carbon::parse($data['fecha'])->startOfDay() : $hoy;
+
+        $festivo = Festivo::query()->whereDate('fecha', $fecha)->first();
+        if ($fecha->isWeekend() || $festivo) {
+            $motivo = $fecha->isWeekend() ? 'fin de semana' : 'festivo';
+            $texto = 'La fecha seleccionada (' . $fecha->format('Y-m-d') . ') es ' . $motivo . '. No se puede justificar ausencia ese día.';
+            if ($festivo && !empty($festivo->nombre)) {
+                $texto .= ' ' . $festivo->nombre;
+            }
+            return back()->with(['status' => $texto, 'error' => true]);
+        }
 
         $fichaje = Fichaje::firstOrCreate(
             ['id_usuario' => $usuario->id, 'fecha' => $fecha],
