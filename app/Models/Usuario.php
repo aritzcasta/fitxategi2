@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Usuario extends Authenticatable
+class Usuario extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, MustVerifyEmailTrait;
 
     protected $table = 'usuario';
 
@@ -41,6 +43,7 @@ class Usuario extends Authenticatable
         'fecha_ini' => 'date',
         'fecha_fin' => 'date',
         'horas_extra' => 'decimal:2',
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'veces_registradas' => 'integer',
         'faltas_justificadas' => 'integer',
