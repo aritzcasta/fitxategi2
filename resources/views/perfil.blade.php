@@ -76,6 +76,67 @@
                         <p class="text-4xl font-bold text-red-900 dark:text-red-100">{{ $llegadasTarde }}</p>
                     </div>
                 </div>
+
+                <!-- Cambiar Contraseña -->
+                <div class="mt-8 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800 p-6 shadow-lg">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-blue-900 dark:text-blue-100">Cambiar Contraseña</h2>
+                    </div>
+
+                    @if(session('success'))
+                        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('perfil.updatePassword') }}" class="space-y-4">
+                        @csrf
+                        @method('PATCH')
+
+                        <div>
+                            <label for="current_password" class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                                Contraseña Actual
+                            </label>
+                            <input type="password" id="current_password" name="current_password" required
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
+                        </div>
+
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                                Nueva Contraseña
+                            </label>
+                            <input type="password" id="password" name="password" required minlength="8"
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
+                        </div>
+
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                                Confirmar Nueva Contraseña
+                            </label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" required
+                                   class="w-full px-4 py-3 rounded-xl border-2 border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-800 text-blue-900 dark:text-blue-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                            Actualizar Contraseña
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

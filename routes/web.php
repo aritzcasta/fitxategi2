@@ -26,6 +26,7 @@ Route::middleware(['session.auth', 'verified'])->group(function () {
 
     // Perfil del usuario
     Route::get('/perfil', [PerfilController::class, 'show'])->name('perfil');
+    Route::patch('/perfil/password', [PerfilController::class, 'updatePassword'])->name('perfil.updatePassword');
 
     // Rutas de administración — requieren rol admin
     Route::middleware(\App\Http\Middleware\RequireAdmin::class)->group(function () {
