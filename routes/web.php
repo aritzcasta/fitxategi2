@@ -11,17 +11,14 @@ use App\Http\Controllers\Admin\AdminUserPanelController;
 use App\Http\Controllers\PanelAdminController;
 
 // Rutas de autenticación (login, register, logout, etc.)
-Auth::routes();
+// Habilitar verificación de email para completar el registro.
+Auth::routes(['verify' => true]);
 
 // Recuperar contraseña
 Route::get('/password', [RecuperarContrasenaController::class, 'showLinkRequestForm'])->name('Reset-password');
 Route::post('/password/email', [RecuperarContrasenaController::class, 'sendResetLinkEmail'])->name('password.email');
 
-// Ver página del código actual
-Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
 
-// Obtener el código actual en JSON
-Route::get('/codigo/actual', [CodigoController::class, 'actual'])->name('codigo.actual');
 
 Route::middleware('session.auth')->group(function () {
     // Página de bienvenida (usar el mismo controlador que /home)
@@ -35,19 +32,46 @@ Route::middleware('session.auth')->group(function () {
 
     // Rutas de administración — requieren rol admin
     Route::middleware(\App\Http\Middleware\RequireAdmin::class)->group(function () {
+
+        // Ver página del código actual
+        Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
+
+        // Obtener el código actual en JSON
+        Route::get('/codigo/actual', [CodigoController::class, 'actual'])->name('codigo.actual');
+
         // Panel de administración
         Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
         Route::delete('/admin/usuarios/kill/{id}',[PanelAdminController::class, 'usuarioKill'])->name('admin.usuarios.kill');
+        // Justificaciones (fichajes justificados)
+        Route::get('/admin/justificaciones', [PanelAdminController::class, 'justificaciones'])->name('admin.justificaciones');
+
+        // Festivos
+        Route::get('/admin/festivos', [PanelAdminController::class, 'festivos'])->name('admin.festivos');
+        Route::post('/admin/festivos', [PanelAdminController::class, 'festivosStore'])->name('admin.festivos.store');
+        Route::delete('/admin/festivos', [PanelAdminController::class, 'festivosDestroyMany'])->name('admin.festivos.destroyMany');
+        Route::delete('/admin/festivos/{id}', [PanelAdminController::class, 'festivosDestroy'])->name('admin.festivos.destroy');
+
         // Lista de usuarios en panel admin
         Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
+
         Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');
+
         Route::patch('/admin/usuarios/{id}', [PanelAdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
         Route::delete('/admin/usuarios/{id}',[PanelAdminController::class, 'usuarioDestroy'])->name('admin.usuarios.destroy');
 
         // Empresas
         Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
+
+        // Crear empresa
+        Route::get('/admin/crearempresas', [PanelAdminController::class, 'empresaCreate'])->name('admin.crearempresas');
+        Route::post('/admin/empresas', [PanelAdminController::class, 'empresaStore'])->name('admin.empresas.store');
+
         Route::get('/admin/empresas/{id}', [PanelAdminController::class, 'empresaShow'])->name('admin.empresas.show');
 
+        // Exportar empresa (Excel / PDF)
+        Route::get('/admin/empresas/{id}/export/excel', [PanelAdminController::class, 'empresaExportExcel'])->name('admin.empresas.export.excel');
+
+        Route::get('/admin/empresas/{id}/export/pdf', [PanelAdminController::class, 'empresaExportPdf'])->name('admin.empresas.export.pdf');
     });
 
     // Registrar entrada de fichaje
@@ -64,4 +88,6 @@ Route::middleware('session.auth')->group(function () {
          Route::get('/users/search', [AdminUserPanelController::class, 'search'])->name('userPanel.search');
 
     }); */
+    // Justificar falta (descripcion + foto opcional)
+    Route::post('/fichaje/justificar', [FichajeController::class, 'justificar'])->name('fichaje.justificar');
 });

@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
 
         DB::table('rol')->insert([
             'id' => 1,
-            'nombre' => 'Administrador',
+            'nombre' => 'admin',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
          DB::table('rol')->insert([
             'id' => 2,
-            'nombre' => 'Estudiante',
+            'nombre' => 'usuario',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

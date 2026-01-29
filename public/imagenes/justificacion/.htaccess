@@ -1,0 +1,6 @@
+# Evitar ejecución de scripts y listado de directorio
+<FilesMatch "\.(php|phtml|phar|pl|py|jsp|sh|cgi)$">
+  Deny from all
+</FilesMatch>
+
+Options -Indexes

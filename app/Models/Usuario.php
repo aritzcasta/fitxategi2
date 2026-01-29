@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Usuario extends Authenticatable
+class Usuario extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes,MustVerifyEmailTrait;
+
 
     protected $table = 'usuario';
 
@@ -28,6 +31,8 @@ class Usuario extends Authenticatable
     'fecha_fin',
     'horas_extra',
     'veces_registradas',
+    'faltas_justificadas',
+    'faltas_sin_justificar',
     ];
 
     protected $hidden = [
@@ -40,8 +45,11 @@ class Usuario extends Authenticatable
         'fecha_ini' => 'date',
         'fecha_fin' => 'date',
         'horas_extra' => 'decimal:2',
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'veces_registradas' => 'integer',
+        'faltas_justificadas' => 'integer',
+        'faltas_sin_justificar' => 'integer',
     ];
 
     public function isAdmin(): bool

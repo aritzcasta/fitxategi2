@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fichaje;
+use App\Models\Festivo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -29,6 +30,17 @@ class HomeController extends Controller
         $usuario = Auth::user();
         $hoy = Carbon::today();
 
+        $festivoHoy = Festivo::query()->whereDate('fecha', $hoy)->first();
+        $esNoLaborable = $hoy->isWeekend() || (bool) $festivoHoy;
+        $motivoNoLaborable = null;
+        if ($esNoLaborable) {
+            if ($hoy->isWeekend()) {
+                $motivoNoLaborable = 'Hoy es fin de semana';
+            } else {
+                $motivoNoLaborable = 'Hoy es festivo' . (!empty($festivoHoy->nombre) ? (': ' . $festivoHoy->nombre) : '');
+            }
+        }
+
         $fichajeHoy = Fichaje::where('id_usuario', $usuario->id)
             ->whereDate('fecha', $hoy)
             ->first();
@@ -46,6 +58,6 @@ class HomeController extends Controller
             }
         }
 
-        return view('home', compact('yaEntrada', 'yaSalida', 'puedeSalida', 'horaFin', 'fichajeHoy'));
+        return view('home', compact('yaEntrada', 'yaSalida', 'puedeSalida', 'horaFin', 'fichajeHoy', 'esNoLaborable', 'motivoNoLaborable'));
     }
 }

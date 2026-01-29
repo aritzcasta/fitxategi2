@@ -19,11 +19,16 @@ class Fichaje extends Model
         'hora_entrada',
         'hora_salida',
         'estado',
+        'justificado',
+        'justificacion',
+        'justificacion_foto',
+        'justificacion_estado',
     ];
 
     protected $casts = [
         'fecha' => 'date',
         'fecha_original' => 'date',
+        'justificado' => 'boolean',
     ];
 
     public function usuario(): BelongsTo

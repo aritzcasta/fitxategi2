@@ -3,18 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fichaje;
+use App\Models\Festivo;
 use App\Models\RegistroCodigo;
+use App\Models\Usuario;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class FichajeController extends Controller
 {
     public function entrada(Request $request): RedirectResponse
     {
         $usuario = Auth::user();
+        if (! $usuario instanceof Usuario) {
+            abort(403, 'Acceso no autorizado.');
+        }
         $hoy = Carbon::today();
+
+        $festivoHoy = Festivo::query()->whereDate('fecha', $hoy)->first();
+        if ($hoy->isWeekend() || $festivoHoy) {
+            $motivo = $hoy->isWeekend() ? 'fin de semana' : 'festivo';
+            $texto = 'Hoy (' . $hoy->format('Y-m-d') . ') es ' . $motivo . '. No se puede fichar.';
+            if ($festivoHoy && !empty($festivoHoy->nombre)) {
+                $texto .= ' ' . $festivoHoy->nombre;
+            }
+            return back()->with(['status' => $texto, 'error' => true]);
+        }
 
         $codigoIngresado = $request->input('codigo');
         $codigoValido = RegistroCodigo::where('codigo', $codigoIngresado)
@@ -47,13 +64,38 @@ class FichajeController extends Controller
             }
         }
 
-        return back()->with('status', 'Entrada registrada correctamente.');
+        $manana = Carbon::today()->addDay();
+        $festivoManana = Festivo::query()->whereDate('fecha', $manana)->first();
+
+        $flash = ['status' => 'Entrada registrada correctamente.'];
+        if ($festivoManana) {
+            $texto = 'Aviso: mañana (' . $manana->format('Y-m-d') . ') es festivo.';
+            if (!empty($festivoManana->nombre)) {
+                $texto .= ' ' . $festivoManana->nombre;
+            }
+            $flash['warning'] = $texto;
+        }
+
+        return back()->with($flash);
     }
 
     public function salida(Request $request): RedirectResponse
     {
         $usuario = Auth::user();
+        if (! $usuario instanceof Usuario) {
+            abort(403, 'Acceso no autorizado.');
+        }
         $hoy = Carbon::today();
+
+        $festivoHoy = Festivo::query()->whereDate('fecha', $hoy)->first();
+        if ($hoy->isWeekend() || $festivoHoy) {
+            $motivo = $hoy->isWeekend() ? 'fin de semana' : 'festivo';
+            $texto = 'Hoy (' . $hoy->format('Y-m-d') . ') es ' . $motivo . '. No se puede fichar.';
+            if ($festivoHoy && !empty($festivoHoy->nombre)) {
+                $texto .= ' ' . $festivoHoy->nombre;
+            }
+            return back()->with(['status' => $texto, 'error' => true]);
+        }
 
         $codigoIngresado = $request->input('codigo');
         $codigoValido = RegistroCodigo::where('codigo', $codigoIngresado)
@@ -88,6 +130,97 @@ class FichajeController extends Controller
         $fichaje->hora_salida = Carbon::now()->format('H:i:s');
         $fichaje->save();
 
-        return back()->with('status', 'Salida registrada correctamente.');
+        $manana = Carbon::today()->addDay();
+        $festivoManana = Festivo::query()->whereDate('fecha', $manana)->first();
+
+        $flash = ['status' => 'Salida registrada correctamente.'];
+        if ($festivoManana) {
+            $texto = 'Aviso: mañana (' . $manana->format('Y-m-d') . ') es festivo.';
+            if (!empty($festivoManana->nombre)) {
+                $texto .= ' ' . $festivoManana->nombre;
+            }
+            $flash['warning'] = $texto;
+        }
+
+        return back()->with($flash);
+    }
+
+    public function justificar(Request $request): RedirectResponse
+    {
+        $usuario = Auth::user();
+        if (! $usuario instanceof Usuario) {
+            abort(403, 'Acceso no autorizado.');
+        }
+        $hoy = Carbon::today();
+
+        $data = $request->validate([
+            'descripcion' => 'required|string|max:2000',
+            'foto' => 'nullable|image|max:4096',
+            'fecha' => 'nullable|date',
+        ]);
+
+        $fecha = isset($data['fecha']) ? Carbon::parse($data['fecha'])->startOfDay() : $hoy;
+
+        $festivo = Festivo::query()->whereDate('fecha', $fecha)->first();
+        if ($fecha->isWeekend() || $festivo) {
+            $motivo = $fecha->isWeekend() ? 'fin de semana' : 'festivo';
+            $texto = 'La fecha seleccionada (' . $fecha->format('Y-m-d') . ') es ' . $motivo . '. No se puede justificar ausencia ese día.';
+            if ($festivo && !empty($festivo->nombre)) {
+                $texto .= ' ' . $festivo->nombre;
+            }
+            return back()->with(['status' => $texto, 'error' => true]);
+        }
+
+        $fichaje = Fichaje::firstOrCreate(
+            ['id_usuario' => $usuario->id, 'fecha' => $fecha],
+            ['fecha_original' => $fecha]
+        );
+
+        // Estado previo para ajustar contadores
+        $wasAlreadyJustificado = (bool) $fichaje->justificado;
+        $wasSinJustificar = ($fichaje->estado === 'sin_justificar');
+
+        $fichaje->justificado = true;
+        $fichaje->justificacion = $data['descripcion'];
+        $fichaje->justificacion_estado = 'pending';
+
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+
+            $dir = public_path('imagenes/justificacion');
+            if (! File::exists($dir)) {
+                File::makeDirectory($dir, 0755, true);
+            }
+
+            $filename = Str::random(40) . '.' . $foto->getClientOriginalExtension();
+            $foto->move($dir, $filename);
+
+            // Guardamos la ruta relativa desde public para usar en vistas: "imagenes/justificacion/xxx.jpg"
+            $fichaje->justificacion_foto = 'imagenes/justificacion/' . $filename;
+        }
+
+        $fichaje->save();
+
+        // Si antes estuvo marcado como sin_justificar, decrementamos el contador de faltas sin justificar
+        if ($wasSinJustificar) {
+            try {
+                if ($usuario->faltas_sin_justificar > 0) {
+                    $usuario->decrement('faltas_sin_justificar');
+                }
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+
+        // Incrementar contador de faltas justificadas si antes no estaba justificado
+        if (! $wasAlreadyJustificado) {
+            try {
+                $usuario->increment('faltas_justificadas');
+            } catch (\Throwable $e) {
+                // no bloquear el flujo si falla
+            }
+        }
+
+        return back()->with('status', 'Justificación enviada. Quedará pendiente de revisión.');
     }
 }
