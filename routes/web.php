@@ -8,6 +8,7 @@ use App\Http\Controllers\FichajeController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Admin\AdminUserPanelController;
+use App\Http\Controllers\PanelAdminController;
 
 // Rutas de autenticación (login, register, logout, etc.)
 Auth::routes();
@@ -18,6 +19,7 @@ Route::post('/password/email', [RecuperarContrasenaController::class, 'sendReset
 
 // Ver página del código actual
 Route::get('/codigo', [CodigoController::class, 'show'])->name('codigo');
+
 // Obtener el código actual en JSON
 Route::get('/codigo/actual', [CodigoController::class, 'actual'])->name('codigo.actual');
 
@@ -30,6 +32,19 @@ Route::middleware('session.auth')->group(function () {
 
     // Perfil del usuario
     Route::get('/perfil', [PerfilController::class, 'show'])->name('perfil');
+
+    // Rutas de administración — requieren rol admin
+    Route::middleware(\App\Http\Middleware\RequireAdmin::class)->group(function () {
+        // Panel de administración
+        Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
+        // Lista de usuarios en panel admin
+        Route::get('/admin/usuarios', [PanelAdminController::class, 'usuarios'])->name('admin.usuarios');
+        Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');
+        Route::patch('/admin/usuarios/{id}', [PanelAdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
+        // Empresas
+        Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
+        Route::get('/admin/empresas/{id}', [PanelAdminController::class, 'empresaShow'])->name('admin.empresas.show');
+    });
 
     // Registrar entrada de fichaje
     Route::post('/fichaje/entrada', [FichajeController::class, 'entrada'])->name('fichaje.entrada');

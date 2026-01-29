@@ -2,13 +2,14 @@
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 py-12">
-    <div class="w-full sm:max-w-lg px-8 py-10 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-        <form method="POST" action="{{ route('register') }}">
+    <div class="w-full sm:max-w-lg px-8 py-10 bg-indigo-100 dark:bg-gray-900 shadow-md overflow-hidden sm:rounded-lg">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-md">
+            <form method="POST" action="{{ route('register') }}">
             @csrf
 
             <div>
                 <label for="name" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Name') }}</label>
-                <input id="name" type="text" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                <input id="name" type="text" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                 @error('name')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
@@ -16,7 +17,7 @@
 
             <div class="mt-6">
                 <label for="email" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Email') }}</label>
-                <input id="email" type="email" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" name="email" value="{{ old('email') }}" required autocomplete="email">
+                <input id="email" type="email" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" name="email" value="{{ old('email') }}" required autocomplete="email">
                 @error('email')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
@@ -24,7 +25,7 @@
 
             <div class="mt-6">
                 <label for="empresa_id" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Empresa') }}</label>
-                <select id="empresa_id" name="empresa_id" required class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="empresa_id" name="empresa_id" required class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="">{{ __('Selecciona una empresa') }}</option>
                     @foreach ($empresas ?? [] as $empresa)
                         <option value="{{ $empresa->id }}" {{ old('empresa_id') == $empresa->id ? 'selected' : '' }}>
@@ -39,7 +40,7 @@
 
             <div class="mt-6">
                 <label for="fecha_fin" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Fecha fin') }}</label>
-                <input id="fecha_fin" type="date" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" name="fecha_fin" value="{{ old('fecha_fin') }}" required>
+                <input id="fecha_fin" type="date" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" name="fecha_fin" value="{{ old('fecha_fin') }}" required>
                 @error('fecha_fin')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
@@ -47,7 +48,7 @@
 
             <div class="mt-6">
                 <label for="password" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Password') }}</label>
-                <input id="password" type="password" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" name="password" required autocomplete="new-password">
+                <input id="password" type="password" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" name="password" required autocomplete="new-password">
                 @error('password')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
@@ -55,7 +56,7 @@
 
             <div class="mt-6">
                 <label for="password-confirm" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Confirm Password') }}</label>
-                <input id="password-confirm" type="password" class="block mt-1 w-full py-3 px-4 rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" name="password_confirmation" required autocomplete="new-password">
+                <input id="password-confirm" type="password" class="block mt-1 w-full py-2.5 px-4 rounded-md shadow-sm border border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" name="password_confirmation" required autocomplete="new-password">
             </div>
 
             <div class="flex items-center justify-between mt-10">
@@ -70,6 +71,7 @@
                 </button>
             </div>
         </form>
+        </div>
     </div>
 </div>
 @endsection

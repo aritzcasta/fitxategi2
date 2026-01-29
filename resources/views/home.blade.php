@@ -14,6 +14,9 @@
         </button>
     </form>
     
+    @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
+        <a href="{{ route('admin.panel') }}" class="hidden sm:inline-flex absolute top-16 right-4 items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-500 transition shadow">Panel Admin</a>
+    @endif
     <div class="w-full max-w-lg px-6 py-10 bg-white dark:bg-gray-800 shadow-2xl overflow-hidden rounded-3xl text-center">
         @if (auth()->user() && auth()->user()->rol && auth()->user()->rol->nombre === 'admin')
             <div class="absolute top-4 left-4">
@@ -27,26 +30,23 @@
             </div>
         @endif
 
+        <!-- Bienvenida -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                ¡Bienvenido, {{ auth()->user()->nombre }}!
+            </h1>
+            
+        </div>
+
         @if (session('status'))
             <div class="mb-4 px-4 py-3 rounded-lg text-sm {{ session('error') ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' }}">
                 {{ session('status') }}
             </div>
         @endif
 
-        <!-- Cronómetro -->
+        <!-- Estado -->
         <div class="mb-8">
-            <div class="flex items-center justify-center gap-3 mb-4">
-                <svg class="w-10 h-10 text-gray-400 dark:text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                </svg>
-                <div id="cronometro" class="text-6xl font-bold text-gray-800 dark:text-gray-100 tabular-nums tracking-tight">
-                    00:00
-                </div>
-                <div id="centesimas" class="text-3xl font-semibold text-gray-400 dark:text-gray-500 tabular-nums">
-                    00
-                </div>
-            </div>
+            
             
             <div id="mensaje-estado" class="px-6 py-2.5 rounded-full text-sm font-medium inline-block" style="background-color: #fce7f3; color: #be185d;">
                 @if ($yaEntrada && !$yaSalida)
@@ -62,6 +62,7 @@
             @if (!$yaEntrada || $yaSalida)
                 <!-- Botón Iniciar -->
                 <button onclick="mostrarModalCodigo('iniciar')" 
+                        type="button"
                         class="w-full flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -72,6 +73,7 @@
             @else
                 <!-- Botón Pausa (visible solo cuando está iniciado, pero no hace nada) -->
                 <button id="btn-pausa" 
+                        type="button"
                         class="w-full flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -83,6 +85,7 @@
 
                 <!-- Botón Finalizar -->
                 <button onclick="mostrarModalCodigo('finalizar')" 
+                        type="button"
                         class="w-full flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -90,6 +93,12 @@
                     </svg>
                     Finalizar
                 </button>
+
+                @if (!$puedeSalida)
+                    <div class="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
+                        Puedes finalizar a partir de {{ $horaFin ? $horaFin->format('H:i') : 'tu horario' }}
+                    </div>
+                @endif
             @endif
         </div>
     </div>
@@ -152,37 +161,6 @@
 </div>
 
 <script>
-    let intervalo = null;
-    let tiempoInicio = {{ $yaEntrada && !$yaSalida && isset($fichajeHoy->hora_entrada) ? 'new Date("' . date('Y-m-d') . 'T' . $fichajeHoy->hora_entrada . '")' : 'null' }};
-    
-    function actualizarCronometro() {
-        if (!tiempoInicio) {
-            document.getElementById('cronometro').textContent = '00:00';
-            document.getElementById('centesimas').textContent = '00';
-            return;
-        }
-        
-        const ahora = new Date();
-        const diferencia = ahora - tiempoInicio;
-        
-        const horas = Math.floor(diferencia / 3600000);
-        const minutos = Math.floor((diferencia % 3600000) / 60000);
-        const segundos = Math.floor((diferencia % 60000) / 1000);
-        const centesimas = Math.floor((diferencia % 1000) / 10);
-        
-        const formatoHoras = String(horas).padStart(2, '0');
-        const formatoMinutos = String(minutos).padStart(2, '0');
-        const formatoSegundos = String(segundos).padStart(2, '0');
-        const formatoCentesimas = String(centesimas).padStart(2, '0');
-        
-        if (horas > 0) {
-            document.getElementById('cronometro').textContent = `${formatoHoras}:${formatoMinutos}:${formatoSegundos}`;
-        } else {
-            document.getElementById('cronometro').textContent = `${formatoMinutos}:${formatoSegundos}`;
-        }
-        document.getElementById('centesimas').textContent = formatoCentesimas;
-    }
-    
     function mostrarModalCodigo(accion) {
         const modal = document.getElementById('modal-codigo');
         const form = document.getElementById('form-codigo');
@@ -215,11 +193,5 @@
             cerrarModalCodigo();
         }
     });
-    
-    // Iniciar cronómetro si hay entrada registrada
-    if (tiempoInicio) {
-        actualizarCronometro();
-        intervalo = setInterval(actualizarCronometro, 50);
-    }
 </script>
 @endsection

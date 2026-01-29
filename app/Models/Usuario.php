@@ -26,6 +26,7 @@ class Usuario extends Authenticatable
     'fecha_ini',
     'fecha_fin',
     'horas_extra',
+    'veces_registradas',
     ];
 
     protected $hidden = [
@@ -39,7 +40,13 @@ class Usuario extends Authenticatable
         'fecha_fin' => 'date',
         'horas_extra' => 'decimal:2',
         'password' => 'hashed',
+        'veces_registradas' => 'integer',
     ];
+
+    public function isAdmin(): bool
+    {
+        return $this->rol && $this->rol->nombre === 'admin';
+    }
 
     public function rol(): BelongsTo
     {

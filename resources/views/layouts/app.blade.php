@@ -18,6 +18,17 @@
 
     <!-- alpine -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        /* Hacer el icono del selector de fecha más visible en fondos oscuros (WebKit) */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(2);
+        }
+        /* Opcional: mejorar visibilidad del indicador en otros navegadores si aplicable */
+        input[type="date"]::-ms-clear,
+        input[type="date"]::-ms-expand {
+            filter: invert(1) brightness(2);
+        }
+    </style>
 
     <!-- Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))

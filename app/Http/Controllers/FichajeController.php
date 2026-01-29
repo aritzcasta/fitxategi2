@@ -29,6 +29,7 @@ class FichajeController extends Controller
             ['id_usuario' => $usuario->id, 'fecha' => $hoy],
             ['fecha_original' => $hoy]
         );
+        $wasCreated = $fichaje->wasRecentlyCreated;
 
         if ($fichaje->hora_entrada) {
             return back()->with('status', 'Ya has registrado la entrada hoy.');
@@ -36,6 +37,15 @@ class FichajeController extends Controller
 
         $fichaje->hora_entrada = Carbon::now()->format('H:i:s');
         $fichaje->save();
+
+        if ($wasCreated) {
+            // Increment the counter of times registered for the user
+            try {
+                $usuario->increment('veces_registradas');
+            } catch (\Throwable $e) {
+                // don't break the flow if increment fails; log could be added
+            }
+        }
 
         return back()->with('status', 'Entrada registrada correctamente.');
     }
@@ -59,18 +69,18 @@ class FichajeController extends Controller
             ->first();
 
         if (! $fichaje || ! $fichaje->hora_entrada) {
-            return back()->with('status', 'Primero debes registrar la entrada.');
+            return back()->with(['status' => 'Primero debes registrar la entrada.', 'error' => true]);
         }
 
         if ($fichaje->hora_salida) {
-            return back()->with('status', 'Ya has registrado la salida hoy.');
+            return back()->with(['status' => 'Ya has registrado la salida hoy.', 'error' => true]);
         }
 
         if (! empty($usuario->horario)) {
             if (preg_match('/^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/', $usuario->horario, $matches)) {
                 $horaFin = Carbon::today()->setTimeFromTimeString($matches[2]);
                 if (Carbon::now()->lt($horaFin)) {
-                    return back()->with('status', 'Aún no ha terminado tu horario.');
+                    return back()->with(['status' => 'Aún no ha terminado tu horario. Puedes fichar la salida a partir de las ' . $matches[2] . '.', 'error' => true]);
                 }
             }
         }
