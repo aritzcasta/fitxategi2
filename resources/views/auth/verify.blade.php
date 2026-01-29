@@ -14,7 +14,7 @@
                         </svg>
                     </div>
                     <div class="text-center">
-                        <h2 class="text-2xl font-bold text-white mb-1">{{ __('Verify Your Email Address') }}</h2>
+                        <h2 class="text-2xl font-bold text-white mb-1">Verifica tu Correo Electrónico</h2>
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
-                            {{ __('A fresh verification link has been sent to your email address.') }}
+                            Se ha enviado un nuevo enlace de verificación a tu correo electrónico
                         </div>
                     </div>
                 @endif
@@ -38,8 +38,8 @@
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                         </svg>
                         <div class="text-sm text-slate-600 dark:text-slate-400">
-                            <p class="mb-2">{{ __('Before proceeding, please check your email for a verification link.') }}</p>
-                            <p>{{ __('If you did not receive the email') }},</p>
+                            <p class="mb-2">Antes de continuar, por favor revisa tu correo electrónico para encontrar el enlace de verificación.</p>
+                            <p>Si no recibiste el correo,</p>
                         </div>
                     </div>
                 </div>
@@ -47,9 +47,20 @@
                 <form method="POST" action="{{ route('verification.resend') }}">
                     @csrf
                     <button type="submit" 
-                            class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-bold text-base transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 hover:from-slate-800 hover:via-slate-900 hover:to-black">
+                            class="w-full group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-bold text-base transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 hover:from-slate-800 hover:via-slate-900 hover:to-black mb-4">
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 group-hover:translate-x-full transition-all duration-1000"></div>
-                        <span class="relative z-10">{{ __('click here to request another') }}</span>
+                        <span class="relative z-10">Haz clic aquí para solicitar otro</span>
+                    </button>
+                </form>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                            class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Volver al inicio de sesión
                     </button>
                 </form>
             </div>

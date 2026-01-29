@@ -25,7 +25,6 @@ return new class extends Migration
             $table->date('fecha_fin')->nullable();
             $table->decimal('horas_extra', 5, 2)->default(0);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

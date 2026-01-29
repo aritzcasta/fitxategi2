@@ -6,8 +6,6 @@ use App\Http\Controllers\Auth\RecuperarContrasenaController;
 use App\Http\Controllers\CodigoController;
 use App\Http\Controllers\FichajeController;
 use App\Http\Controllers\PerfilController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\Admin\AdminUserPanelController;
 use App\Http\Controllers\PanelAdminController;
 
 // Rutas de autenticación (login, register, logout, etc.)
@@ -25,7 +23,7 @@ Route::middleware('session.auth')->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('root');
 
     // Panel principal
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     // Perfil del usuario
     Route::get('/perfil', [PerfilController::class, 'show'])->name('perfil');
@@ -41,7 +39,6 @@ Route::middleware('session.auth')->group(function () {
 
         // Panel de administración
         Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
-        Route::delete('/admin/usuarios/kill/{id}',[PanelAdminController::class, 'usuarioKill'])->name('admin.usuarios.kill');
         // Justificaciones (fichajes justificados)
         Route::get('/admin/justificaciones', [PanelAdminController::class, 'justificaciones'])->name('admin.justificaciones');
 
@@ -57,7 +54,6 @@ Route::middleware('session.auth')->group(function () {
         Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');
 
         Route::patch('/admin/usuarios/{id}', [PanelAdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
-        Route::delete('/admin/usuarios/{id}',[PanelAdminController::class, 'usuarioDestroy'])->name('admin.usuarios.destroy');
 
         // Empresas
         Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
@@ -70,7 +66,7 @@ Route::middleware('session.auth')->group(function () {
 
         // Exportar empresa (Excel / PDF)
         Route::get('/admin/empresas/{id}/export/excel', [PanelAdminController::class, 'empresaExportExcel'])->name('admin.empresas.export.excel');
-
+        
         Route::get('/admin/empresas/{id}/export/pdf', [PanelAdminController::class, 'empresaExportPdf'])->name('admin.empresas.export.pdf');
     });
 
@@ -78,16 +74,6 @@ Route::middleware('session.auth')->group(function () {
     Route::post('/fichaje/entrada', [FichajeController::class, 'entrada'])->name('fichaje.entrada');
     // Registrar salida de fichaje
     Route::post('/fichaje/salida', [FichajeController::class, 'salida'])->name('fichaje.salida');
-    Route::get('/users', [AdminUserPanelController::class, 'index'])->name('userPanel');
-    Route::get('/users/search', [AdminUserPanelController::class, 'search'])->name('userPanel.search');
-    Route::post('/users/store', [AdminUserPanelController::class, 'store'])->name('userPanel.store');
-    Route::post('/users/update', [AdminUserPanelController::class, 'update'])->name('userPanel.update');
-    /* Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
-        // Gestión de usuarios, etc. (para futuro)
-         Route::get('/users', [AdminUserPanelController::class, 'index'])->name('userPanel');
-         Route::get('/users/search', [AdminUserPanelController::class, 'search'])->name('userPanel.search');
-
-    }); */
     // Justificar falta (descripcion + foto opcional)
     Route::post('/fichaje/justificar', [FichajeController::class, 'justificar'])->name('fichaje.justificar');
 });
