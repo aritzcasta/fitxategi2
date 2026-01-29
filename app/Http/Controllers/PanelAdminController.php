@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Fichaje;
 use Illuminate\Support\Carbon;
+use Carbon\CarbonPeriod;
 use App\Models\Empresa;
 use App\Models\Festivo;
 use Maatwebsite\Excel\Facades\Excel;
@@ -55,16 +56,42 @@ class PanelAdminController extends Controller
     {
         // Soportar alta múltiple: fechas[] (varios inputs) o compatibilidad con fecha única
         $data = $request->validate([
-            'fechas' => 'nullable|array|min:1',
-            'fechas.*' => 'required|date',
+            'fechas' => 'nullable|array',
+            'fechas.*' => 'nullable|date',
             'fecha' => 'nullable|date',
+            'desde' => 'nullable|date|required_with:hasta',
+            'hasta' => 'nullable|date|required_with:desde|after_or_equal:desde',
             'nombre' => 'nullable|string|max:255',
         ]);
 
         $fechas = [];
-        if (!empty($data['fechas'])) {
-            $fechas = $data['fechas'];
-        } elseif (!empty($data['fecha'])) {
+
+        // 1) Rango desde/hasta (inclusive)
+        if (!empty($data['desde']) && !empty($data['hasta'])) {
+            $desde = Carbon::parse($data['desde'])->startOfDay();
+            $hasta = Carbon::parse($data['hasta'])->startOfDay();
+
+            // Límite defensivo para evitar altas masivas por error
+            if ($desde->diffInDays($hasta) > 366) {
+                return redirect()->route('admin.festivos')
+                    ->with('status', 'El rango es demasiado grande (máx. 367 días).');
+            }
+
+            $period = CarbonPeriod::create($desde, $hasta);
+            foreach ($period as $date) {
+                $fechas[] = $date->toDateString();
+            }
+        }
+
+        // 2) Fechas sueltas (varios inputs)
+        if (empty($fechas) && !empty($data['fechas'])) {
+            $fechas = array_values(array_filter($data['fechas'], function ($v) {
+                return !is_null($v) && $v !== '';
+            }));
+        }
+
+        // 3) Compatibilidad con una fecha única
+        if (empty($fechas) && !empty($data['fecha'])) {
             $fechas = [$data['fecha']];
         }
 

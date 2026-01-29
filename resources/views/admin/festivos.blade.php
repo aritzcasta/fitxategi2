@@ -18,7 +18,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="bg-gradient-to-r from-slate-700 to-slate-800 px-8 py-6">
                 <h2 class="text-xl font-bold text-white">Añadir festivo</h2>
-                <p class="text-slate-300 text-sm">Puedes añadir varias fechas de una vez</p>
+                <p class="text-slate-300 text-sm">Puedes añadir varias fechas sueltas o un rango (desde/hasta)</p>
             </div>
 
             <form method="POST" action="{{ route('admin.festivos.store') }}" class="p-8 space-y-4">
@@ -26,9 +26,33 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fechas <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fechas (opcional)</label>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label for="desde" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Desde (opcional)</label>
+                                <input id="desde" name="desde" type="date" value="{{ old('desde') }}"
+                                       class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('desde') ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
+                                @error('desde')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="hasta" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Hasta (opcional)</label>
+                                <input id="hasta" name="hasta" type="date" value="{{ old('hasta') }}"
+                                       class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('hasta') ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
+                                @error('hasta')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-600 dark:text-slate-300 mb-2">
+                            Si rellenas <span class="font-semibold">Desde</span> y <span class="font-semibold">Hasta</span>, se marcarán todos los días del rango (incluidos). Si no, puedes añadir fechas sueltas abajo.
+                        </div>
+
                         <div id="fechas-container" class="space-y-2">
-                            <input name="fechas[]" type="date" required
+                            <input name="fechas[]" type="date"
                                    class="w-full px-4 py-3 rounded-xl border-2 {{ ($errors->has('fechas') || $errors->has('fechas.*')) ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
                         </div>
                         @error('fechas')
@@ -143,7 +167,6 @@
                 var input = document.createElement('input');
                 input.type = 'date';
                 input.name = 'fechas[]';
-                input.required = true;
                 input.className = 'w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition';
                 return input;
             }
