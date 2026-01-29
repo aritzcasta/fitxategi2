@@ -73,6 +73,17 @@
             </div>
         @endif
 
+        @if (!empty($esNoLaborable))
+            <div class="mb-6 px-6 py-4 rounded-2xl text-sm font-medium shadow-lg border bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.721-1.36 3.486 0l6.518 11.59c.75 1.334-.214 2.99-1.742 2.99H3.48c-1.528 0-2.492-1.656-1.742-2.99L8.257 3.1zM11 14a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>{{ $motivoNoLaborable ?? 'Hoy no es un día laborable' }}. No debes fichar.</span>
+                </div>
+            </div>
+        @endif
+
         @if (session('warning'))
             <div class="mb-6 px-6 py-4 rounded-2xl text-sm font-medium shadow-lg border bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800">
                 <div class="flex items-center gap-3">
@@ -124,7 +135,16 @@
 
                 <!-- Botones de Control -->
                 <div class="space-y-3">
-                    @if (!$yaEntrada || $yaSalida)
+                    @if (!empty($esNoLaborable))
+                        <button type="button" disabled
+                                class="w-full flex items-center justify-center gap-3 px-8 py-5 rounded-2xl text-white font-bold text-lg shadow-lg bg-slate-400 cursor-not-allowed opacity-80">
+                            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M8 12h8" fill="white"/>
+                            </svg>
+                            <span>No disponible hoy</span>
+                        </button>
+                    @elseif (!$yaEntrada || $yaSalida)
                         <!-- Botón Iniciar -->
                         <button onclick="mostrarModalCodigo('iniciar')" 
                                 type="button"
@@ -183,9 +203,9 @@
                 </div>
 
                 <!-- Botón Justificar -->
-                <button onclick="mostrarModalJustificar()" 
+                <button @if (!empty($esNoLaborable)) disabled @else onclick="mostrarModalJustificar()" @endif
                         type="button" 
-                        class="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-gray-700 dark:text-gray-200 font-semibold text-base transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500">
+                        class="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-200 border-2 {{ !empty($esNoLaborable) ? 'text-gray-400 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 cursor-not-allowed opacity-80' : 'text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500' }}">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
