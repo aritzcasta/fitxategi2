@@ -46,26 +46,26 @@ class MarkUnregisteredAsAbsent extends Command
                     'id_usuario' => $user->id,
                     'fecha' => $date,
                     'fecha_original' => $date,
-                    'estado' => 'sin_justificar',
+                    'estado' => 2, // 2 = ausente
                     'justificado' => false,
                 ]);
                 $created++;
-                // Incrementar contador de faltas sin justificar en usuario
+                // Incrementar contador de ausencias sin justificar en usuario
                 try {
-                    $user->increment('faltas_sin_justificar');
+                    $user->increment('ausencias_sin_justificar');
                 } catch (\Throwable $e) {
                     // ignore
                 }
             } else {
                 // Si existe pero no tiene entrada y no está justificado, marcar estado
-                if (empty($fichaje->hora_entrada) && ! $fichaje->justificado && $fichaje->estado !== 'sin_justificar') {
+                if (empty($fichaje->hora_entrada) && ! $fichaje->justificado && $fichaje->estado !== 2) {
                     $previousEstado = $fichaje->estado;
-                    $fichaje->estado = 'sin_justificar';
+                    $fichaje->estado = 2; // 2 = ausente
                     $fichaje->save();
                     $updated++;
-                    // Si antes no era sin_justificar, incrementamos contador
+                    // Si antes no era ausente, incrementamos contador
                     try {
-                        $user->increment('faltas_sin_justificar');
+                        $user->increment('ausencias_sin_justificar');
                     } catch (\Throwable $e) {
                         // ignore
                     }

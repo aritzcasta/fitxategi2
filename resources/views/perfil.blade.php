@@ -31,7 +31,7 @@
 
             <!-- Contenido -->
             <div class="p-8">
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Horas Restantes -->
                     <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-6 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center gap-3 mb-3">
@@ -50,17 +50,17 @@
                         </p>
                     </div>
 
-                    <!-- Incidencias -->
-                    <div class="bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border-2 border-amber-200 dark:border-amber-800 p-6 shadow-lg hover:shadow-xl transition-shadow">
+                    <!-- Llegadas a Tiempo -->
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border-2 border-green-200 dark:border-green-800 p-6 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-xl bg-green-600 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
-                            <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Incidencias</p>
+                            <p class="text-sm font-semibold text-green-700 dark:text-green-400">Llegadas a Tiempo</p>
                         </div>
-                        <p class="text-4xl font-bold text-amber-900 dark:text-amber-100">{{ $incidencias }}</p>
+                        <p class="text-4xl font-bold text-green-900 dark:text-green-100">{{ $usuario->llegadas_a_tiempo }}</p>
                     </div>
 
                     <!-- Llegadas Tarde -->
@@ -73,9 +73,50 @@
                             </div>
                             <p class="text-sm font-semibold text-red-700 dark:text-red-400">Llegadas Tarde</p>
                         </div>
-                        <p class="text-4xl font-bold text-red-900 dark:text-red-100">{{ $llegadasTarde }}</p>
+                        <p class="text-4xl font-bold text-red-900 dark:text-red-100">{{ $usuario->llegadas_tarde }}</p>
                     </div>
+
+                    <!-- Justificaciones Aprobadas -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800 p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <p class="text-sm font-semibold text-blue-700 dark:text-blue-400">Justificaciones Aprobadas</p>
+                        </div>
+                        <p class="text-4xl font-bold text-blue-900 dark:text-blue-100">{{ $usuario->faltas_justificadas }}</p>
+                    </div>
+
+                    <!-- Justificaciones Pendientes -->
+                    <div class="bg-gradient-to-br from-amber-50 to-yellow-100 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-2xl border-2 border-amber-200 dark:border-amber-800 p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Justificaciones Pendientes</p>
+                        </div>
+                        <p class="text-4xl font-bold text-amber-900 dark:text-amber-100">{{ $justificacionesPendientes }}</p>
+                    </div>
+
+                    <!-- Justificaciones Rechazadas -->
+                    <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-6 shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-600 dark:text-slate-400">Justificaciones Rechazadas</p>
+                        </div>
+                        <p class="text-4xl font-bold text-slate-900 dark:text-slate-100">{{ $usuario->faltas_sin_justificar }}</p>
+                    </div>
+
                 </div>
+
 
                 <!-- Cambiar Contraseña -->
                 <div class="mt-8 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800 p-6 shadow-lg">

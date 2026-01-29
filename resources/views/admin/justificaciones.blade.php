@@ -20,6 +20,18 @@
 		<!-- Filtros -->
 		<div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-lg">
 			<form method="GET" action="{{ route('admin.justificaciones') }}" class="flex flex-col sm:flex-row gap-4 sm:items-end">
+				<div class="w-full sm:w-56">
+					<label for="estado" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Estado</label>
+					<select id="estado"
+							name="estado"
+							class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
+						@php($selected = $estado ?? request('estado'))
+						<option value="" @selected(empty($selected))>Todos</option>
+						<option value="pending" @selected(($selected ?? '') === 'pending' || ($selected ?? '') === 'pendiente')>Pendiente</option>
+						<option value="approved" @selected(($selected ?? '') === 'approved' || ($selected ?? '') === 'aprobada' || ($selected ?? '') === 'aprobado')>Aprobada</option>
+						<option value="rejected" @selected(($selected ?? '') === 'rejected' || ($selected ?? '') === 'rechazada' || ($selected ?? '') === 'rechazado')>Rechazada</option>
+					</select>
+				</div>
 				<div class="flex-1">
 					<label for="desde" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Desde</label>
 					<input id="desde" 
@@ -67,6 +79,7 @@
 							<th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Imagen</th>
 							<th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Motivo</th>
 							<th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Estado</th>
+							<th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Acciones</th>
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -116,15 +129,52 @@
 									</div>
 								</td>
 								<td class="px-6 py-4">
-									@php($estado = $j->justificacion_estado ?? 'Pendiente')
-									<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">
+									@php($raw = $j->justificacion_estado ?? 'pending')
+									@php($estado = $raw === 'approved' ? 'Aprobada' : ($raw === 'rejected' ? 'Rechazada' : 'Pendiente'))
+									@php($badge = $raw === 'approved'
+										? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+										: ($raw === 'rejected'
+											? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+											: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'))
+									<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $badge }}">
 										{{ $estado }}
 									</span>
+								</td>
+								<td class="px-6 py-4">
+									<div class="flex items-center gap-2">
+										@if (($j->justificacion_estado ?? 'pending') === 'pending')
+											<form method="POST" action="{{ route('admin.justificaciones.approve', $j->id) }}" onsubmit="return confirm('¿Aprobar esta justificación?');">
+												@csrf
+												<button type="submit" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold bg-green-600 hover:bg-green-700 text-white shadow">
+													Aprobar
+												</button>
+											</form>
+											<form method="POST" action="{{ route('admin.justificaciones.reject', $j->id) }}" onsubmit="return confirm('¿Rechazar esta justificación?');">
+												@csrf
+												<button type="submit" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white shadow">
+													Rechazar
+												</button>
+											</form>
+										@else
+											<form method="POST" action="{{ route('admin.justificaciones.reject', $j->id) }}" onsubmit="return confirm('¿Cambiar a RECHAZADA? Esto ajustará contadores si estaba aprobada.');">
+												@csrf
+												<button type="submit" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-600 hover:bg-slate-700 text-white shadow">
+													Marcar rechazada
+											</button>
+										</form>
+										<form method="POST" action="{{ route('admin.justificaciones.approve', $j->id) }}" onsubmit="return confirm('¿Cambiar a APROBADA?');">
+												@csrf
+												<button type="submit" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-600 hover:bg-slate-700 text-white shadow">
+													Marcar aprobada
+											</button>
+										</form>
+										@endif
+									</div>
 								</td>
 							</tr>
 						@empty
 							<tr>
-								<td colspan="6" class="px-6 py-12 text-center">
+								<td colspan="7" class="px-6 py-12 text-center">
 									<svg class="w-16 h-16 mx-auto text-slate-400 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
 									</svg>

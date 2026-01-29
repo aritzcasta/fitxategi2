@@ -53,14 +53,40 @@ class FichajeController extends Controller
         }
 
         $fichaje->hora_entrada = Carbon::now()->format('H:i:s');
+
+        // Determinar si llegó a tiempo o tarde
+        $estado = 0; // 0 = a tiempo, 1 = tarde
+        $horaInicio = null;
+        if (! empty($usuario->horario) && preg_match('/^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/', $usuario->horario, $matches)) {
+            $horaInicio = Carbon::today()->setTimeFromTimeString($matches[1]);
+        }
+        if (! $horaInicio) {
+            $horaInicio = Carbon::today()->setTime(8, 0, 0);
+        }
+
+        $limiteTarde = $horaInicio->copy()->addMinutes(5); // 08:05 si el inicio es 08:00
+        $horaEntradaActual = Carbon::now();
+        if ($horaEntradaActual->greaterThan($limiteTarde)) {
+            $estado = 1;
+        }
+
+        $fichaje->estado = $estado;
         $fichaje->save();
 
+        // Incrementar contador correspondiente según el estado
+        try {
+            if ($estado === 0) {
+                $usuario->increment('llegadas_a_tiempo');
+            } elseif ($estado === 1) {
+                $usuario->increment('llegadas_tarde');
+            }
+        } catch (\Throwable $e) {
+        }
+
         if ($wasCreated) {
-            // Increment the counter of times registered for the user
             try {
                 $usuario->increment('veces_registradas');
             } catch (\Throwable $e) {
-                // don't break the flow if increment fails; log could be added
             }
         }
 
@@ -176,11 +202,14 @@ class FichajeController extends Controller
             ['fecha_original' => $fecha]
         );
 
-        // Estado previo para ajustar contadores
         $wasAlreadyJustificado = (bool) $fichaje->justificado;
-        $wasSinJustificar = ($fichaje->estado === 'sin_justificar');
 
-        $fichaje->justificado = true;
+        // Si no hay entrada, esto es una ausencia (estado=2)
+        if (empty($fichaje->hora_entrada) && (int) $fichaje->estado !== 2) {
+            $fichaje->estado = 2;
+        }
+
+        $fichaje->justificado = true; // tiene justificación asociada (pendiente de validar)
         $fichaje->justificacion = $data['descripcion'];
         $fichaje->justificacion_estado = 'pending';
 
@@ -201,24 +230,11 @@ class FichajeController extends Controller
 
         $fichaje->save();
 
-        // Si antes estuvo marcado como sin_justificar, decrementamos el contador de faltas sin justificar
-        if ($wasSinJustificar) {
-            try {
-                if ($usuario->faltas_sin_justificar > 0) {
-                    $usuario->decrement('faltas_sin_justificar');
-                }
-            } catch (\Throwable $e) {
-                // ignore
-            }
-        }
+        // Los contadores de ausencias se ajustan cuando el admin aprueba/rechaza.
+        // Aquí solo marcamos como pendiente.
 
-        // Incrementar contador de faltas justificadas si antes no estaba justificado
-        if (! $wasAlreadyJustificado) {
-            try {
-                $usuario->increment('faltas_justificadas');
-            } catch (\Throwable $e) {
-                // no bloquear el flujo si falla
-            }
+        if ($wasAlreadyJustificado) {
+            return back()->with('status', 'Justificación actualizada. Quedará pendiente de revisión.');
         }
 
         return back()->with('status', 'Justificación enviada. Quedará pendiente de revisión.');

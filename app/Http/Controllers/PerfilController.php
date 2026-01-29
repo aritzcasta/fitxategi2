@@ -19,9 +19,7 @@ class PerfilController extends Controller
         $usuario = Auth::user();
 
         $incidencias = Incidencia::where('id_usuario', $usuario->id)->count();
-        $llegadasTarde = Fichaje::where('id_usuario', $usuario->id)
-            ->where('estado', 'tarde')
-            ->count();
+        $llegadasTarde = $usuario->llegadas_tarde;
 
         $horasRestantes = null;
         if ($usuario->fecha_fin) {
@@ -29,7 +27,17 @@ class PerfilController extends Controller
             $horasRestantes = $diasRestantes * 7;
         }
 
-        return view('perfil', compact('usuario', 'incidencias', 'llegadasTarde', 'horasRestantes'));
+        $justificacionesPendientes = Fichaje::query()
+            ->where('id_usuario', $usuario->id)
+            ->where('justificado', true)
+            ->whereNotNull('justificacion')
+            ->where(function ($q) {
+                $q->whereNull('justificacion_estado')
+                    ->orWhere('justificacion_estado', 'pending');
+            })
+            ->count();
+
+        return view('perfil', compact('usuario', 'incidencias', 'llegadasTarde', 'horasRestantes', 'justificacionesPendientes'));
     }
 
     public function updatePassword(Request $request): RedirectResponse

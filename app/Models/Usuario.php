@@ -31,6 +31,10 @@ class Usuario extends Authenticatable implements MustVerifyEmail
     'veces_registradas',
     'faltas_justificadas',
     'faltas_sin_justificar',
+    'llegadas_a_tiempo',
+    'llegadas_tarde',
+    'ausencias_justificadas',
+    'ausencias_sin_justificar',
     ];
 
     protected $hidden = [
@@ -48,6 +52,10 @@ class Usuario extends Authenticatable implements MustVerifyEmail
         'veces_registradas' => 'integer',
         'faltas_justificadas' => 'integer',
         'faltas_sin_justificar' => 'integer',
+        'llegadas_a_tiempo' => 'integer',
+        'llegadas_tarde' => 'integer',
+        'ausencias_justificadas' => 'integer',
+        'ausencias_sin_justificar' => 'integer',
     ];
 
     public function isAdmin(): bool

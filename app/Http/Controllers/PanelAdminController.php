@@ -16,6 +16,43 @@ use Illuminate\Support\Str;
 
 class PanelAdminController extends Controller
 {
+    private function recalculateAusenciasCounters(Usuario $usuario): void
+    {
+        $justificacionesAprobadas = Fichaje::query()
+            ->where('id_usuario', $usuario->id)
+            ->whereNotNull('justificacion')
+            ->where('justificacion_estado', 'approved')
+            ->count();
+
+        $justificacionesRechazadas = Fichaje::query()
+            ->where('id_usuario', $usuario->id)
+            ->whereNotNull('justificacion')
+            ->where('justificacion_estado', 'rejected')
+            ->count();
+
+        $justificadas = Fichaje::query()
+            ->where('id_usuario', $usuario->id)
+            ->where('estado', 2)
+            ->where('justificacion_estado', 'approved')
+            ->count();
+
+        $sinJustificar = Fichaje::query()
+            ->where('id_usuario', $usuario->id)
+            ->where('estado', 2)
+            ->where(function ($q) {
+                $q->whereNull('justificacion_estado')
+                    ->orWhere('justificacion_estado', 'pending')
+                    ->orWhere('justificacion_estado', 'rejected');
+            })
+            ->count();
+
+        $usuario->ausencias_justificadas = $justificadas;
+        $usuario->ausencias_sin_justificar = $sinJustificar;
+        $usuario->faltas_justificadas = $justificacionesAprobadas;
+        $usuario->faltas_sin_justificar = $justificacionesRechazadas;
+        $usuario->save();
+    }
+
     public function index(){
         return view('admin.panel');
     }
@@ -24,11 +61,37 @@ class PanelAdminController extends Controller
     {
         $desde = $request->query('desde');
         $hasta = $request->query('hasta');
+        $estado = $request->query('estado');
 
         $justificaciones = Fichaje::query()
             ->with(['usuario:id,nombre,email'])
             ->where('justificado', true)
             ->whereNotNull('justificacion')
+            ->when($estado, function ($query, $estado) {
+                // Normalizar estados
+                $estado = strtolower(trim((string) $estado));
+                if ($estado === 'all' || $estado === '') {
+                    return;
+                }
+
+                if ($estado === 'pending' || $estado === 'pendiente') {
+                    $query->where(function ($q) {
+                        $q->whereNull('justificacion_estado')
+                            ->orWhere('justificacion_estado', 'pending');
+                    });
+                    return;
+                }
+
+                if (in_array($estado, ['approved', 'aprobada', 'aprobado'], true)) {
+                    $query->where('justificacion_estado', 'approved');
+                    return;
+                }
+
+                if (in_array($estado, ['rejected', 'rechazada', 'rechazado'], true)) {
+                    $query->where('justificacion_estado', 'rejected');
+                    return;
+                }
+            })
             ->when($desde, function ($query, $desde) {
                 $query->whereDate('fecha', '>=', Carbon::parse($desde)->startOfDay());
             })
@@ -43,7 +106,62 @@ class PanelAdminController extends Controller
             'justificaciones' => $justificaciones,
             'desde' => $desde,
             'hasta' => $hasta,
+            'estado' => $estado,
         ]);
+    }
+
+    public function justificacionesApprove($id)
+    {
+        $fichaje = Fichaje::query()->with('usuario')->findOrFail($id);
+
+        if (empty($fichaje->justificacion)) {
+            return redirect()->route('admin.justificaciones')->with('status', 'No hay justificación para validar.');
+        }
+
+        if (($fichaje->justificacion_estado ?? '') === 'approved') {
+            return redirect()->route('admin.justificaciones')->with('status', 'Esta justificación ya estaba aprobada.');
+        }
+
+        // Si no hay entrada, esto es una ausencia
+        if (empty($fichaje->hora_entrada) && (int) $fichaje->estado !== 2) {
+            $fichaje->estado = 2;
+        }
+
+        $fichaje->justificacion_estado = 'approved';
+        $fichaje->save();
+
+        if ($fichaje->usuario) {
+            $this->recalculateAusenciasCounters($fichaje->usuario);
+        }
+
+        return redirect()->route('admin.justificaciones')->with('status', 'Justificación aprobada.');
+    }
+
+    public function justificacionesReject($id)
+    {
+        $fichaje = Fichaje::query()->with('usuario')->findOrFail($id);
+
+        if (empty($fichaje->justificacion)) {
+            return redirect()->route('admin.justificaciones')->with('status', 'No hay justificación para rechazar.');
+        }
+
+        if (($fichaje->justificacion_estado ?? '') === 'rejected') {
+            return redirect()->route('admin.justificaciones')->with('status', 'Esta justificación ya estaba rechazada.');
+        }
+
+        // Si no hay entrada, esto es una ausencia
+        if (empty($fichaje->hora_entrada) && (int) $fichaje->estado !== 2) {
+            $fichaje->estado = 2;
+        }
+
+        $fichaje->justificacion_estado = 'rejected';
+        $fichaje->save();
+
+        if ($fichaje->usuario) {
+            $this->recalculateAusenciasCounters($fichaje->usuario);
+        }
+
+        return redirect()->route('admin.justificaciones')->with('status', 'Justificación rechazada.');
     }
 
     public function festivos()

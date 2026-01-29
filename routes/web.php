@@ -41,6 +41,8 @@ Route::middleware(['session.auth', 'verified'])->group(function () {
         Route::get('/admin/panel', [PanelAdminController::class, 'index'])->name('admin.panel');
         // Justificaciones (fichajes justificados)
         Route::get('/admin/justificaciones', [PanelAdminController::class, 'justificaciones'])->name('admin.justificaciones');
+        Route::post('/admin/justificaciones/{id}/approve', [PanelAdminController::class, 'justificacionesApprove'])->name('admin.justificaciones.approve');
+        Route::post('/admin/justificaciones/{id}/reject', [PanelAdminController::class, 'justificacionesReject'])->name('admin.justificaciones.reject');
 
         // Festivos
         Route::get('/admin/festivos', [PanelAdminController::class, 'festivos'])->name('admin.festivos');
