@@ -32,21 +32,19 @@
             <!-- Contenido -->
             <div class="p-8">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    <!-- Horas Restantes -->
+                    <!-- Faltas -->
                     <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-6 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center gap-3 mb-3">
                             <div class="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
-                            <p class="text-sm font-semibold text-slate-600 dark:text-slate-400">Horas Restantes</p>
+                            <p class="text-sm font-semibold text-slate-600 dark:text-slate-400">Faltas</p>
                         </div>
-                        <p class="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                            {{ $horasRestantes !== null ? $horasRestantes : '—' }}
-                        </p>
+                        <p class="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">{{ $faltasTotal }}</p>
                         <p class="text-xs text-slate-500 dark:text-slate-400">
-                            Calculado con 7h/día hasta {{ $usuario->fecha_fin ? $usuario->fecha_fin->format('d/m/Y') : 'sin fecha' }}
+                            Sin justificar: {{ $faltasSinJustificar }} · Justificadas: {{ $faltasJustificadas }}
                         </p>
                     </div>
 

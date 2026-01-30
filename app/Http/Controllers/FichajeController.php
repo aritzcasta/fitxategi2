@@ -42,6 +42,36 @@ class FichajeController extends Controller
             return back()->with(['status' => 'El código no es válido o ha caducado.', 'error' => true]);
         }
 
+        // Regla: si no ficha antes de las 14:00, cuenta como falta (ausencia) y no se permite registrar entrada
+        $limiteEntrada = Carbon::today()->setTime(14, 0, 0);
+        if (Carbon::now()->greaterThanOrEqualTo($limiteEntrada)) {
+            $fichaje = Fichaje::firstOrCreate(
+                ['id_usuario' => $usuario->id, 'fecha' => $hoy],
+                ['fecha_original' => $hoy]
+            );
+
+            if (! empty($fichaje->hora_entrada)) {
+                return back()->with('status', 'Ya has registrado la entrada hoy.');
+            }
+
+            $wasAlreadyAbsent = ((int) ($fichaje->estado ?? 0) === 2);
+            if (! $wasAlreadyAbsent) {
+                $fichaje->estado = 2;
+                $fichaje->justificado = false;
+                $fichaje->save();
+
+                try {
+                    $usuario->increment('ausencias_sin_justificar');
+                } catch (\Throwable $e) {
+                }
+            }
+
+            return back()->with([
+                'status' => 'Has superado las 14:00. Hoy cuenta como falta y no se puede registrar la entrada. Puedes enviar una justificación.',
+                'error' => true,
+            ]);
+        }
+
         $fichaje = Fichaje::firstOrCreate(
             ['id_usuario' => $usuario->id, 'fecha' => $hoy],
             ['fecha_original' => $hoy]

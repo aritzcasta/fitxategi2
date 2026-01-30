@@ -21,11 +21,9 @@ class PerfilController extends Controller
         $incidencias = Incidencia::where('id_usuario', $usuario->id)->count();
         $llegadasTarde = $usuario->llegadas_tarde;
 
-        $horasRestantes = null;
-        if ($usuario->fecha_fin) {
-            $diasRestantes = max(0, Carbon::today()->diffInDays($usuario->fecha_fin, false));
-            $horasRestantes = $diasRestantes * 7;
-        }
+        $faltasSinJustificar = (int) ($usuario->ausencias_sin_justificar ?? 0);
+        $faltasJustificadas = (int) ($usuario->ausencias_justificadas ?? 0);
+        $faltasTotal = $faltasSinJustificar + $faltasJustificadas;
 
         $justificacionesPendientes = Fichaje::query()
             ->where('id_usuario', $usuario->id)
@@ -37,7 +35,7 @@ class PerfilController extends Controller
             })
             ->count();
 
-        return view('perfil', compact('usuario', 'incidencias', 'llegadasTarde', 'horasRestantes', 'justificacionesPendientes'));
+        return view('perfil', compact('usuario', 'incidencias', 'llegadasTarde', 'faltasTotal', 'faltasSinJustificar', 'faltasJustificadas', 'justificacionesPendientes'));
     }
 
     public function updatePassword(Request $request): RedirectResponse
