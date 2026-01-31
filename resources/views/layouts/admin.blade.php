@@ -44,7 +44,7 @@
             <nav class="p-4 flex-1">
                 <ul class="space-y-2">
                     <li>
-                        <a href="{{ route('admin.empresas') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.empresas') ? 'bg-slate-700 text-white shadow-lg border-2 border-blue-500' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-transparent' }}">
+                        <a href="{{ route('admin.empresas') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.empresas') ? 'bg-slate-700 text-white shadow-lg border-2 border-slate-500' : 'text-gray-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-transparent' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                                 <span>Empresas</span>
                         </a>

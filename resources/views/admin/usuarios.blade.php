@@ -21,7 +21,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-gradient-to-r from-slate-700 to-slate-800">
+                    <thead class="bg-gradient-to-br from-blue-600 to-indigo-700">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Nombre</th>
                             <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Email</th>
@@ -32,11 +32,11 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach($users as $user)
-                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-150">
+                            <tr class="hover:bg-blue-500 dark:hover:bg-indigo-800/50 transition-colors duration-150">
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('admin.usuarios.edit', $user->id) }}" 
+                                    <a href="{{ route('admin.usuarios.edit', $user->id) }}"
                                        class="flex items-center gap-3 group">
-                                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-white font-bold shadow-md">
+                                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold shadow-md">
                                             {{ strtoupper(substr($user->nombre, 0, 1)) }}
                                         </div>
                                         <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100">
@@ -57,7 +57,7 @@
                                         $bgColor = 'bg-red-50 dark:bg-red-900/20';
                                         $textColor = 'text-red-700 dark:text-red-300';
                                         $statusText = 'No registrado hoy';
-                                        
+
                                         if ($user->status === 'green') {
                                             $color = 'bg-emerald-500';
                                             $bgColor = 'bg-emerald-50 dark:bg-emerald-900/20';

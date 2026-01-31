@@ -2,7 +2,13 @@
 
 @section('content')
     <div class="max-w-6xl mx-auto space-y-8">
-        <div class="flex items-start justify-between gap-4">
+
+        <div class="flex items-center gap-4 mb-2">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Festivos</h1>
                 <p class="text-sm text-slate-600 dark:text-slate-400">Gestiona los días festivos marcados por el administrador</p>
@@ -16,7 +22,7 @@
         @endif
 
         <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div class="bg-gradient-to-r from-slate-700 to-slate-800 px-8 py-6">
+            <div class="bg-gradient-to-br from-rose-500 to-red-600 px-8 py-6">
                 <h2 class="text-xl font-bold text-white">Añadir festivo</h2>
                 <p class="text-slate-300 text-sm">Puedes añadir varias fechas sueltas o un rango (desde/hasta)</p>
             </div>

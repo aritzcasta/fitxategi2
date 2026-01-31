@@ -34,29 +34,29 @@
 				</div>
 				<div class="flex-1">
 					<label for="desde" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Desde</label>
-					<input id="desde" 
-						   name="desde" 
-						   type="date" 
-						   value="{{ $desde }}" 
+					<input id="desde"
+						   name="desde"
+						   type="date"
+						   value="{{ $desde }}"
 						   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition" />
 				</div>
 				<div class="flex-1">
 					<label for="hasta" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Hasta</label>
-					<input id="hasta" 
-						   name="hasta" 
-						   type="date" 
-						   value="{{ $hasta }}" 
+					<input id="hasta"
+						   name="hasta"
+						   type="date"
+						   value="{{ $hasta }}"
 						   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition" />
 				</div>
 				<div class="flex gap-3">
-					<button type="submit" 
+					<button type="submit"
 							class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 transition-all duration-200 shadow-lg hover:shadow-xl">
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
 						</svg>
 						Filtrar
 					</button>
-					<a href="{{ route('admin.justificaciones') }}" 
+					<a href="{{ route('admin.justificaciones') }}"
 					   class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-all duration-200 shadow-md border-2 border-slate-200 dark:border-slate-600">
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -71,7 +71,7 @@
 		<div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
 			<div class="overflow-x-auto">
 				<table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-					<thead class="bg-gradient-to-r from-slate-700 to-slate-800">
+					<thead class="bg-gradient-to-br from-amber-600 to-orange-700">
 						<tr>
 							<th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Fecha</th>
 							<th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Usuario</th>
