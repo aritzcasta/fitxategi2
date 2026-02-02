@@ -58,7 +58,7 @@
                             </div>
                             <p class="text-sm font-semibold text-green-700 dark:text-green-400">Llegadas a Tiempo</p>
                         </div>
-                        <p class="text-4xl font-bold text-green-900 dark:text-green-100">{{ $usuario->llegadas_a_tiempo }}</p>
+                        <p class="text-4xl font-bold text-green-900 dark:text-green-100">{{ $usuario->llegadas_a_tiempo ?? 0 }}</p>
                     </div>
 
                     <!-- Llegadas Tarde -->
@@ -71,7 +71,7 @@
                             </div>
                             <p class="text-sm font-semibold text-red-700 dark:text-red-400">Llegadas Tarde</p>
                         </div>
-                        <p class="text-4xl font-bold text-red-900 dark:text-red-100">{{ $usuario->llegadas_tarde }}</p>
+                        <p class="text-4xl font-bold text-red-900 dark:text-red-100">{{ $usuario->llegadas_tarde ?? 0 }}</p>
                     </div>
 
                     <!-- Justificaciones Aprobadas -->
