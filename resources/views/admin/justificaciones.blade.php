@@ -19,35 +19,56 @@
 
 		<!-- Filtros -->
 		<div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-lg">
-			<form method="GET" action="{{ route('admin.justificaciones') }}" class="flex flex-col sm:flex-row gap-4 sm:items-end">
-				<div class="w-full sm:w-56">
-					<label for="estado" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Estado</label>
-					<select id="estado"
-							name="estado"
-							class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
-						@php($selected = $estado ?? request('estado'))
-						<option value="" @selected(empty($selected))>Todos</option>
-						<option value="pending" @selected(($selected ?? '') === 'pending' || ($selected ?? '') === 'pendiente')>Pendiente</option>
-						<option value="approved" @selected(($selected ?? '') === 'approved' || ($selected ?? '') === 'aprobada' || ($selected ?? '') === 'aprobado')>Aprobada</option>
-						<option value="rejected" @selected(($selected ?? '') === 'rejected' || ($selected ?? '') === 'rechazada' || ($selected ?? '') === 'rechazado')>Rechazada</option>
-					</select>
+			<form method="GET" action="{{ route('admin.justificaciones') }}" class="space-y-4">
+				<!-- Buscador de texto -->
+				<div class="w-full">
+					<label for="buscar" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Buscar</label>
+					<div class="flex items-center bg-white dark:bg-slate-700 rounded-xl px-4 py-3 border-2 border-slate-200 dark:border-slate-600 focus-within:border-amber-600 dark:focus-within:border-amber-500 transition">
+						<svg class="w-5 h-5 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+						<input type="text" 
+							   id="buscar"
+							   name="buscar" 
+							   value="{{ request('buscar') }}" 
+							   placeholder="Buscar por usuario o descripción..." 
+							   class="bg-transparent focus:outline-none text-sm text-gray-800 dark:text-gray-200 w-full" />
+						@if(request('buscar'))
+							<a href="{{ route('admin.justificaciones') }}" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+							</a>
+						@endif
+					</div>
 				</div>
-				<div class="flex-1">
-					<label for="desde" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Desde</label>
-					<input id="desde"
-						   name="desde"
-						   type="date"
-						   value="{{ $desde }}"
-						   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition" />
-				</div>
-				<div class="flex-1">
-					<label for="hasta" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Hasta</label>
-					<input id="hasta"
-						   name="hasta"
-						   type="date"
-						   value="{{ $hasta }}"
-						   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition" />
-				</div>
+
+				<!-- Filtros adicionales -->
+				<div class="flex flex-col sm:flex-row gap-4 sm:items-end">
+					<div class="w-full sm:w-56">
+						<label for="estado" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Estado</label>
+						<select id="estado"
+								name="estado"
+								class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
+							@php($selected = $estado ?? request('estado'))
+							<option value="" @selected(empty($selected))>Todos</option>
+							<option value="pending" @selected(($selected ?? '') === 'pending' || ($selected ?? '') === 'pendiente')>Pendiente</option>
+							<option value="approved" @selected(($selected ?? '') === 'approved' || ($selected ?? '') === 'aprobada' || ($selected ?? '') === 'aprobado')>Aprobada</option>
+							<option value="rejected" @selected(($selected ?? '') === 'rejected' || ($selected ?? '') === 'rechazada' || ($selected ?? '') === 'rechazado')>Rechazada</option>
+						</select>
+					</div>
+					<div class="flex-1">
+						<label for="desde" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Desde</label>
+						<input id="desde"
+							   name="desde"
+							   type="date"
+							   value="{{ $desde }}"
+							   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition" />
+					</div>
+					<div class="flex-1">
+						<label for="hasta" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Hasta</label>
+						<input id="hasta"
+							   name="hasta"
+							   type="date"
+							   value="{{ $hasta }}"
+							   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition" />
+					</div>
 				<div class="flex gap-3">
 					<button type="submit"
 							class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 transition-all duration-200 shadow-lg hover:shadow-xl">

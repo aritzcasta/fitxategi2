@@ -16,8 +16,19 @@
                 </div>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
-                <a href="{{ route('admin.crearempresas') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900 transition-all duration-200 shadow-md hover:shadow-lg">
+            <div class="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <form action="{{ route('admin.empresas') }}" method="GET" class="flex-1 max-w-md">
+                    <div class="flex items-center bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-2.5 border-2 border-slate-200 dark:border-slate-700 focus-within:border-slate-600 dark:focus-within:border-slate-500 transition">
+                        <svg class="w-5 h-5 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar empresas..." class="bg-transparent focus:outline-none text-sm text-gray-800 dark:text-gray-200 w-full" />
+                        @if(request('buscar'))
+                            <a href="{{ route('admin.empresas') }}" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+                <a href="{{ route('admin.crearempresas') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900 transition-all duration-200 shadow-md hover:shadow-lg">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 5v14M5 12h14" stroke-linecap="round" />
                     </svg>

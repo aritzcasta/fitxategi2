@@ -15,6 +15,20 @@
                     <p class="text-sm text-slate-600 dark:text-slate-400">Gestiona los usuarios registrados en el sistema</p>
                 </div>
             </div>
+
+            <div class="mt-4">
+                <form action="{{ route('admin.usuarios') }}" method="GET" class="max-w-md">
+                    <div class="flex items-center bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-2.5 border-2 border-slate-200 dark:border-slate-700 focus-within:border-blue-600 dark:focus-within:border-blue-500 transition">
+                        <svg class="w-5 h-5 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar por nombre, email o empresa..." class="bg-transparent focus:outline-none text-sm text-gray-800 dark:text-gray-200 w-full" />
+                        @if(request('buscar'))
+                            <a href="{{ route('admin.usuarios') }}" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Tabla de usuarios -->

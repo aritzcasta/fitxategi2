@@ -30,65 +30,62 @@
             <form method="POST" action="{{ route('admin.festivos.store') }}" class="p-8 space-y-4">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fechas (opcional)</label>
+                <div class="space-y-4">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Fechas (opcional)</label>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                            <div>
-                                <label for="desde" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Desde (opcional)</label>
-                                <input id="desde" name="desde" type="date" value="{{ old('desde') }}"
-                                       class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('desde') ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
-                                @error('desde')
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div>
-                                <label for="hasta" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Hasta (opcional)</label>
-                                <input id="hasta" name="hasta" type="date" value="{{ old('hasta') }}"
-                                       class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('hasta') ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
-                                @error('hasta')
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="desde" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">Desde (opcional)</label>
+                            <input id="desde" name="desde" type="date" value="{{ old('desde') }}"
+                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('desde') ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition">
+                            @error('desde')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
-
-                        <div class="text-xs text-slate-600 dark:text-slate-300 mb-2">
-                            Si rellenas <span class="font-semibold">Desde</span> y <span class="font-semibold">Hasta</span>, se marcarán todos los días del rango (incluidos). Si no, puedes añadir fechas sueltas abajo.
+                        <div>
+                            <label for="hasta" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">Hasta (opcional)</label>
+                            <input id="hasta" name="hasta" type="date" value="{{ old('hasta') }}"
+                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('hasta') ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition">
+                            @error('hasta')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
-
-                        <div id="fechas-container" class="space-y-2">
-                            <input name="fechas[]" type="date"
-                                   class="w-full px-4 py-3 rounded-xl border-2 {{ ($errors->has('fechas') || $errors->has('fechas.*')) ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition">
-                        </div>
-                        @error('fechas')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                        @error('fechas.*')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-
-                        <div class="mt-2 flex items-center gap-2">
-                            <button type="button" id="add-fecha" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-700 text-gray-800 dark:text-gray-100 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M5 12h14" stroke-linecap="round" />
-                                </svg>
-                                Añadir otra fecha
-                            </button>
-                            <button type="button" id="remove-fecha" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-700 text-gray-800 dark:text-gray-100 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
-                                Quitar última
-                            </button>
+                        <div>
+                            <label for="nombre" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">Descripción (opcional)</label>
+                            <input id="nombre" name="nombre" type="text" value="{{ old('nombre') }}"
+                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('nombre') ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition"
+                                   placeholder="Ej: Navidad, Día de la Comunidad...">
+                            @error('nombre')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
-                    <div>
-                    <label for="nombre" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Descripción (opcional)</label>
-                    <input id="nombre" name="nombre" type="text" value="{{ old('nombre') }}"
-                           class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('nombre') ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-600' }} bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition"
-                           placeholder="Ej: Navidad, Día de la Comunidad...">
-                    @error('nombre')
+                    <div class="text-xs text-slate-600 dark:text-slate-300">
+                        Si rellenas <span class="font-semibold">Desde</span> y <span class="font-semibold">Hasta</span>, se marcarán todos los días del rango (incluidos). Si no, puedes añadir fechas sueltas abajo.
+                    </div>
+
+                    <div id="fechas-container" class="space-y-2">
+                        <input name="fechas[]" type="date"
+                               class="w-full px-4 py-3 rounded-xl border-2 {{ ($errors->has('fechas') || $errors->has('fechas.*')) ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition">
+                    </div>
+                    @error('fechas')
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
+                    @error('fechas.*')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="add-fecha" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-700 text-gray-800 dark:text-gray-100 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+                            </svg>
+                            Añadir otra fecha
+                        </button>
+                        <button type="button" id="remove-fecha" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-700 text-gray-800 dark:text-gray-100 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+                            Quitar última
+                        </button>
                     </div>
                 </div>
 
@@ -173,7 +170,7 @@
                 var input = document.createElement('input');
                 input.type = 'date';
                 input.name = 'fechas[]';
-                input.className = 'w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:border-slate-600 focus:bg-white dark:focus:bg-gray-600 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 transition';
+                input.className = 'w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition';
                 return input;
             }
 

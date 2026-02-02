@@ -99,10 +99,6 @@
                             <button class="md:hidden p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                             </button>
-                            <form action="{{ url()->current() }}" method="GET" class="hidden sm:flex items-center bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-2 border border-slate-200 dark:border-slate-700">
-                                <svg class="w-4 h-4 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Buscar..." class="bg-transparent focus:outline-none text-sm text-gray-800 dark:text-gray-200" />
-                            </form>
                         </div>
 
                         <div class="flex items-center gap-3">

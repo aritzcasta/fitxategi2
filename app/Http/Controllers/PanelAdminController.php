@@ -62,11 +62,21 @@ class PanelAdminController extends Controller
         $desde = $request->query('desde');
         $hasta = $request->query('hasta');
         $estado = $request->query('estado');
+        $buscar = $request->query('buscar');
 
         $justificaciones = Fichaje::query()
             ->with(['usuario:id,nombre,email'])
             ->where('justificado', true)
             ->whereNotNull('justificacion')
+            ->when($buscar, function ($query, $buscar) {
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('justificacion', 'like', "%{$buscar}%")
+                      ->orWhereHas('usuario', function ($subQ) use ($buscar) {
+                          $subQ->where('nombre', 'like', "%{$buscar}%")
+                               ->orWhere('email', 'like', "%{$buscar}%");
+                      });
+                });
+            })
             ->when($estado, function ($query, $estado) {
                 // Normalizar estados
                 $estado = strtolower(trim((string) $estado));
@@ -267,16 +277,19 @@ class PanelAdminController extends Controller
     {
         $hoy = Carbon::today();
 
-        $q = request('q');
+        $buscar = request('buscar');
 
-        $users = Usuario::with('rol')
+        $users = Usuario::with(['rol', 'empresa'])
             ->whereHas('rol', function ($r) {
                 $r->where('nombre', 'usuario');
             })
-            ->when($q, function ($query, $q) {
-                $query->where(function($sub) use ($q) {
-                    $sub->where('nombre', 'like', "%{$q}%")
-                        ->orWhere('email', 'like', "%{$q}%");
+            ->when($buscar, function ($query, $buscar) {
+                $query->where(function($sub) use ($buscar) {
+                    $sub->where('nombre', 'like', "%{$buscar}%")
+                        ->orWhere('email', 'like', "%{$buscar}%")
+                        ->orWhereHas('empresa', function ($empQ) use ($buscar) {
+                            $empQ->where('nombre', 'like', "%{$buscar}%");
+                        });
                 });
             })
             ->get()
@@ -313,18 +326,18 @@ class PanelAdminController extends Controller
             return $user;
         });
 
-        return view('admin.usuarios', ['users' => $users, 'q' => $q]);
+        return view('admin.usuarios', ['users' => $users]);
     }
 
     public function empresas()
     {
-        $q = request('q');
+        $buscar = request('buscar');
 
-        $empresas = Empresa::when($q, function ($query, $q) {
-            $query->where('nombre', 'like', "%{$q}%");
+        $empresas = Empresa::when($buscar, function ($query, $buscar) {
+            $query->where('nombre', 'like', "%{$buscar}%");
         })->get();
 
-        return view('admin.empresas', ['empresas' => $empresas, 'q' => $q]);
+        return view('admin.empresas', ['empresas' => $empresas]);
     }
 
     public function empresaCreate()
