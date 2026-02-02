@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
+
         DB::table('rol')->insert([
             'id' => 1,
             'nombre' => 'admin',
@@ -48,6 +49,11 @@ class DatabaseSeeder extends Seeder
 
 
             'activo' => 1,
+        ]);
+        $this->call([
+
+            EmpresasSeeder::class,
+
         ]);
 
 
