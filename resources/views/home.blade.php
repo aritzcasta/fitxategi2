@@ -17,6 +17,13 @@
             </div>
 
             <div class="flex items-center gap-2">
+                <a href="{{ route('perfil') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span class="hidden md:inline">Mi Perfil</span>
+                </a>
+
                 @if (auth()->check() && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
                     <a href="{{ route('codigo') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-700 text-white hover:bg-slate-800 transition-all duration-200 shadow-md hover:shadow-lg">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -192,21 +199,11 @@
                     @endif
                 </div>
 
-                <!-- Divisor -->
-                <div class="relative my-6">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
-                    </div>
-                    <div class="relative flex justify-center text-xs">
-                        <span class="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium"></span>
-                    </div>
-                </div>
-
                 <!-- Botón Justificar -->
                 <button @if (!empty($esNoLaborable)) disabled @else onclick="mostrarModalJustificar()" @endif
                         type="button"
-                        class="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-200 border-2 {{ !empty($esNoLaborable) ? 'text-gray-400 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 cursor-not-allowed opacity-80' : 'text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500' }}">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        class="mt-4 w-auto self-center inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-md font-medium text-xs transition-all duration-200 border {{ !empty($esNoLaborable) ? 'text-gray-400 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 cursor-not-allowed opacity-80' : 'text-gray-600 dark:text-gray-300 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-700/40 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500' }}">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     <span>Justificar Ausencia</span>
