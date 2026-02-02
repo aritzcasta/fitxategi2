@@ -447,4 +447,85 @@ class PanelAdminController extends Controller
 
         return redirect()->route('admin.usuarios')->with('status', 'Usuario actualizado correctamente.');
     }
+
+    // Borrar usuarios - Confirmar contraseña
+    public function borrarUsuariosConfirm()
+    {
+        // Si ya verificó la contraseña en esta sesión (últimos 10 minutos)
+        if (session('password_confirmed_at') && now()->diffInMinutes(session('password_confirmed_at')) < 10) {
+            return redirect()->route('admin.borrar-usuarios.index');
+        }
+
+        return view('admin.confirm-password');
+    }
+
+    // Verificar contraseña
+    public function borrarUsuariosVerify(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        // Verificar que la contraseña es correcta
+        if (!\Hash::check($request->password, auth()->user()->password)) {
+            return back()->withErrors(['password' => 'La contraseña es incorrecta.']);
+        }
+
+        // Guardar el timestamp de confirmación
+        session(['password_confirmed_at' => now()]);
+
+        return redirect()->route('admin.borrar-usuarios.index');
+    }
+
+    // Mostrar lista de usuarios para borrar
+    public function borrarUsuariosIndex()
+    {
+        // Verificar que la contraseña fue confirmada recientemente
+        if (!session('password_confirmed_at') || now()->diffInMinutes(session('password_confirmed_at')) >= 10) {
+            return redirect()->route('admin.borrar-usuarios');
+        }
+
+        // Obtener todos los usuarios que NO son administradores
+        $usuarios = Usuario::with('empresa')
+            ->whereHas('rol', function ($q) {
+                $q->where('nombre', '!=', 'admin');
+            })
+            ->withCount('fichajes')
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.borrar-usuarios', ['usuarios' => $usuarios]);
+    }
+
+    // Borrar usuario
+    public function borrarUsuarioDestroy($id)
+    {
+        // Verificar que la contraseña fue confirmada recientemente
+        if (!session('password_confirmed_at') || now()->diffInMinutes(session('password_confirmed_at')) >= 10) {
+            return redirect()->route('admin.borrar-usuarios')
+                ->with(['status' => 'La sesión ha expirado. Confirma tu contraseña nuevamente.', 'error' => true]);
+        }
+
+        $usuario = Usuario::findOrFail($id);
+
+        // Prevenir que se borre a sí mismo
+        if ($usuario->id === auth()->id()) {
+            return redirect()->route('admin.borrar-usuarios.index')
+                ->with(['status' => 'No puedes eliminar tu propia cuenta.', 'error' => true]);
+        }
+
+        // Verificar que no sea admin
+        if ($usuario->rol && $usuario->rol->nombre === 'admin') {
+            return redirect()->route('admin.borrar-usuarios.index')
+                ->with(['status' => 'No se puede eliminar a un administrador.', 'error' => true]);
+        }
+
+        $nombre = $usuario->nombre;
+
+        // Eliminar usuario (esto también eliminará sus fichajes por cascada si está configurado)
+        $usuario->delete();
+
+        return redirect()->route('admin.borrar-usuarios.index')
+            ->with('status', "Usuario '$nombre' eliminado correctamente.");
+    }
 }

@@ -70,6 +70,12 @@ Route::middleware(['session.auth', 'verified'])->group(function () {
         Route::get('/admin/empresas/{id}/export/excel', [PanelAdminController::class, 'empresaExportExcel'])->name('admin.empresas.export.excel');
         
         Route::get('/admin/empresas/{id}/export/pdf', [PanelAdminController::class, 'empresaExportPdf'])->name('admin.empresas.export.pdf');
+
+        // Borrar usuarios (con confirmación de contraseña)
+        Route::get('/admin/borrar-usuarios', [PanelAdminController::class, 'borrarUsuariosConfirm'])->name('admin.borrar-usuarios');
+        Route::post('/admin/borrar-usuarios/verify', [PanelAdminController::class, 'borrarUsuariosVerify'])->name('admin.borrar-usuarios.verify');
+        Route::get('/admin/borrar-usuarios/lista', [PanelAdminController::class, 'borrarUsuariosIndex'])->name('admin.borrar-usuarios.index');
+        Route::delete('/admin/borrar-usuarios/{id}', [PanelAdminController::class, 'borrarUsuarioDestroy'])->name('admin.borrar-usuarios.destroy');
     });
 
     // Registrar entrada de fichaje
