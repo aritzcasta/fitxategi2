@@ -23,5 +23,10 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        // Llamar al seeder de empresas
+        $this->call([
+            EmpresasSeeder::class,
+        ]);
     }
 }
