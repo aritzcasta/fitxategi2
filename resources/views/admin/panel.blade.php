@@ -77,9 +77,55 @@
 				</div>
 				<p class="text-xs text-emerald-600 dark:text-emerald-400">Crear y borrar días festivos</p>
 			</a>
+
+			<!-- Borrar Usuarios -->
+			<a href="{{ route('admin.borrar-usuarios') }}" class="group bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-900/20 rounded-2xl border-2 border-red-200 dark:border-red-800 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+				<div class="flex items-center gap-4 mb-3">
+					<div class="w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+						<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+					</div>
+					<div>
+						<p class="text-sm font-semibold text-red-600 dark:text-red-400">Eliminar</p>
+						<p class="text-2xl font-bold text-red-900 dark:text-red-100">Usuarios</p>
+					</div>
+				</div>
+				<p class="text-xs text-red-500 dark:text-red-400">Borrar usuarios del sistema</p>
+			</a>
+
+			<!-- Borrar Empresas -->
+			<a href="{{ route('admin.borrar-empresas') }}" class="group bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-900/20 rounded-2xl border-2 border-orange-200 dark:border-orange-800 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+				<div class="flex items-center gap-4 mb-3">
+					<div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+						<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+					</div>
+					<div>
+						<p class="text-sm font-semibold text-orange-600 dark:text-orange-400">Eliminar</p>
+						<p class="text-2xl font-bold text-orange-900 dark:text-orange-100">Empresas</p>
+					</div>
+				</div>
+				<p class="text-xs text-orange-500 dark:text-orange-400">Borrar empresas y sus usuarios</p>
+			</a>
 		</div>
 
-
+		<!-- Información adicional -->
+		<div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+			<div class="flex items-start gap-3">
+				<svg class="w-6 h-6 text-slate-600 dark:text-slate-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+					<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+				</svg>
+				<div>
+					<p class="font-semibold text-slate-800 dark:text-slate-200 mb-2">Guía de navegación</p>
+					<ul class="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+						<li>• Usa la barra lateral para acceder a las diferentes secciones</li>
+						<li>• En "Empresas" puedes ver, crear y editar las empresas del sistema</li>
+						<li>• En "Usuarios" puedes gestionar los usuarios y sus permisos</li>
+						<li>• En "Justificaciones" puedes revisar las ausencias reportadas</li>
+						<li>• En "Festivos" puedes gestionar los días festivos del calendario</li>
+						<li>• En "Borrar Usuarios" y "Borrar Empresas" puedes eliminar datos permanentemente (con confirmación de contraseña)</li>
+					</ul>
+				</div>
+			</div>
+		</div>
 
 		<div class="mt-6">
 			@yield('admin.content')

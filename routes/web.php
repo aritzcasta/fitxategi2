@@ -56,6 +56,8 @@ Route::middleware(['session.auth', 'verified'])->group(function () {
         Route::get('/admin/usuarios/{id}/edit', [PanelAdminController::class, 'usuarioEdit'])->name('admin.usuarios.edit');
 
         Route::patch('/admin/usuarios/{id}', [PanelAdminController::class, 'usuarioUpdate'])->name('admin.usuarios.update');
+        
+        Route::patch('/admin/usuarios/{id}/cambiar-rol', [PanelAdminController::class, 'cambiarRol'])->name('admin.usuarios.cambiar-rol');
 
         // Empresas
         Route::get('/admin/empresas', [PanelAdminController::class, 'empresas'])->name('admin.empresas');
@@ -76,6 +78,12 @@ Route::middleware(['session.auth', 'verified'])->group(function () {
         Route::post('/admin/borrar-usuarios/verify', [PanelAdminController::class, 'borrarUsuariosVerify'])->name('admin.borrar-usuarios.verify');
         Route::get('/admin/borrar-usuarios/lista', [PanelAdminController::class, 'borrarUsuariosIndex'])->name('admin.borrar-usuarios.index');
         Route::delete('/admin/borrar-usuarios/{id}', [PanelAdminController::class, 'borrarUsuarioDestroy'])->name('admin.borrar-usuarios.destroy');
+
+        // Borrar empresas (con confirmación de contraseña)
+        Route::get('/admin/borrar-empresas', [PanelAdminController::class, 'borrarEmpresasConfirm'])->name('admin.borrar-empresas');
+        Route::post('/admin/borrar-empresas/verify', [PanelAdminController::class, 'borrarEmpresasVerify'])->name('admin.borrar-empresas.verify');
+        Route::get('/admin/borrar-empresas/lista', [PanelAdminController::class, 'borrarEmpresasIndex'])->name('admin.borrar-empresas.index');
+        Route::delete('/admin/borrar-empresas/{id}', [PanelAdminController::class, 'borrarEmpresaDestroy'])->name('admin.borrar-empresas.destroy');
     });
 
     // Registrar entrada de fichaje

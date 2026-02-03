@@ -34,7 +34,21 @@
         </div>
     @endif
 
- 
+    <!-- Buscador -->
+    <div class="mb-6">
+        <form action="{{ route('admin.borrar-usuarios.index') }}" method="GET" class="max-w-md">
+            <div class="flex items-center bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-2.5 border-2 border-slate-200 dark:border-slate-700 focus-within:border-red-600 dark:focus-within:border-red-500 transition">
+                <svg class="w-5 h-5 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar por nombre, email o empresa..." class="bg-transparent focus:outline-none text-sm text-gray-800 dark:text-gray-200 w-full" />
+                @if(request('buscar'))
+                    <a href="{{ route('admin.borrar-usuarios.index') }}" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+  
     <!-- Tabla de usuarios -->
     <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div class="overflow-x-auto">
@@ -43,6 +57,7 @@
                     <tr>
                         <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Usuario</th>
                         <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Email</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Rol</th>
                         <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Empresa</th>
                         <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Fichajes</th>
                         <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-white">Acción</th>
@@ -62,10 +77,24 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{{ $usuario->email }}</td>
+                            <td class="px-6 py-4">
+                                @if($usuario->rol?->nombre === 'admin')
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                        </svg>
+                                        Administrador
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                                        Usuario
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{{ $usuario->empresa?->nombre ?? '—' }}</td>
                             <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{{ $usuario->fichajes_count ?? 0 }}</td>
                             <td class="px-6 py-4 text-right">
-                                <button onclick="mostrarModalBorrar({{ $usuario->id }}, '{{ addslashes($usuario->nombre) }}')" 
+                                <button onclick="mostrarModalBorrar({{ $usuario->id }}, '{{ addslashes($usuario->nombre) }}', '{{ $usuario->rol?->nombre }}')" 
                                         type="button"
                                         class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -77,7 +106,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="6" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <svg class="w-16 h-16 text-slate-400 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -152,26 +181,33 @@
     </div>
 </div>
 
-<script>
-function mostrarModalBorrar(userId, userName) {
-    const modal = document.getElementById('modal-borrar');
-    const form = document.getElementById('form-borrar');
-    const nombreSpan = document.getElementById('usuario-nombre');
-    const confirmInput = document.getElementById('confirmacion');
-    const btnConfirmar = document.getElementById('btn-confirmar');
-    
-    form.action = `/admin/borrar-usuarios/${userId}`;
-    nombreSpan.textContent = userName;
-    confirmInput.value = '';
-    btnConfirmar.disabled = true;
-    
-    modal.classList.remove('hidden');
-    
-    // Habilitar botón solo si escribe "borrar"
-    confirmInput.addEventListener('input', function() {
-        btnConfirmar.disabled = this.value.toLowerCase() !== 'borrar';
-    });
-}
+    <script>
+    function mostrarModalBorrar(userId, userName, userRol) {
+        const modal = document.getElementById('modal-borrar');
+        const form = document.getElementById('form-borrar');
+        const nombreSpan = document.getElementById('usuario-nombre');
+        const confirmInput = document.getElementById('confirmacion');
+        const btnConfirmar = document.getElementById('btn-confirmar');
+        
+        form.action = `/admin/borrar-usuarios/${userId}`;
+        
+        // Si es administrador, agregar badge visual
+        if (userRol === 'admin') {
+            nombreSpan.innerHTML = `${userName} <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700 ml-2">👑 Admin</span>`;
+        } else {
+            nombreSpan.textContent = userName;
+        }
+        
+        confirmInput.value = '';
+        btnConfirmar.disabled = true;
+        
+        modal.classList.remove('hidden');
+        
+        // Habilitar botón solo si escribe "borrar"
+        confirmInput.addEventListener('input', function() {
+            btnConfirmar.disabled = this.value.toLowerCase() !== 'borrar';
+        });
+    }
 
 function cerrarModalBorrar() {
     const modal = document.getElementById('modal-borrar');

@@ -485,12 +485,20 @@ class PanelAdminController extends Controller
             return redirect()->route('admin.borrar-usuarios');
         }
 
-        // Obtener todos los usuarios que NO son administradores
-        $usuarios = Usuario::with('empresa')
-            ->whereHas('rol', function ($q) {
-                $q->where('nombre', '!=', 'admin');
-            })
+        // Obtener todos los usuarios (incluidos administradores) con búsqueda
+        $buscar = request('buscar');
+        
+        $usuarios = Usuario::with(['empresa', 'rol'])
             ->withCount('fichajes')
+            ->when($buscar, function ($query, $buscar) {
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('nombre', 'like', "%{$buscar}%")
+                      ->orWhere('email', 'like', "%{$buscar}%")
+                      ->orWhereHas('empresa', function ($q2) use ($buscar) {
+                          $q2->where('nombre', 'like', "%{$buscar}%");
+                      });
+                });
+            })
             ->orderBy('nombre')
             ->get();
 
@@ -527,5 +535,104 @@ class PanelAdminController extends Controller
 
         return redirect()->route('admin.borrar-usuarios.index')
             ->with('status', "Usuario '$nombre' eliminado correctamente.");
+    }
+
+    // Borrar empresas - Confirmar contraseña
+    public function borrarEmpresasConfirm()
+    {
+        // Si ya verificó la contraseña en esta sesión (últimos 10 minutos)
+        if (session('password_confirmed_empresas_at') && now()->diffInMinutes(session('password_confirmed_empresas_at')) < 10) {
+            return redirect()->route('admin.borrar-empresas.index');
+        }
+
+        return view('admin.confirm-password-empresas');
+    }
+
+    // Verificar contraseña para empresas
+    public function borrarEmpresasVerify(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        // Verificar que la contraseña es correcta
+        if (!\Hash::check($request->password, auth()->user()->password)) {
+            return back()->withErrors(['password' => 'La contraseña es incorrecta.']);
+        }
+
+        // Guardar el timestamp de confirmación
+        session(['password_confirmed_empresas_at' => now()]);
+
+        return redirect()->route('admin.borrar-empresas.index');
+    }
+
+    // Mostrar lista de empresas para borrar
+    public function borrarEmpresasIndex()
+    {
+        // Verificar que la contraseña fue confirmada recientemente
+        if (!session('password_confirmed_empresas_at') || now()->diffInMinutes(session('password_confirmed_empresas_at')) >= 10) {
+            return redirect()->route('admin.borrar-empresas');
+        }
+
+        // Obtener todas las empresas con conteo de usuarios y búsqueda
+        $buscar = request('buscar');
+        
+        $empresas = Empresa::withCount('usuarios')
+            ->when($buscar, function ($query, $buscar) {
+                $query->where('nombre', 'like', "%{$buscar}%");
+            })
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.borrar-empresas', ['empresas' => $empresas]);
+    }
+
+    // Borrar empresa
+    public function borrarEmpresaDestroy($id)
+    {
+        // Verificar que la contraseña fue confirmada recientemente
+        if (!session('password_confirmed_empresas_at') || now()->diffInMinutes(session('password_confirmed_empresas_at')) >= 10) {
+            return redirect()->route('admin.borrar-empresas')
+                ->with(['status' => 'La sesión ha expirado. Confirma tu contraseña nuevamente.', 'error' => true]);
+        }
+
+        $empresa = Empresa::withCount('usuarios')->findOrFail($id);
+        $nombre = $empresa->nombre;
+        $usuariosCount = $empresa->usuarios_count;
+
+        // Eliminar todos los usuarios de la empresa primero
+        // (esto también eliminará sus fichajes por cascada si está configurado)
+        Usuario::where('empresa_id', $empresa->id)->delete();
+
+        // Eliminar la empresa
+        $empresa->delete();
+
+        return redirect()->route('admin.borrar-empresas.index')
+            ->with('status', "Empresa '$nombre' y $usuariosCount usuario(s) eliminados correctamente.");
+    }
+
+    // Cambiar rol de usuario
+    public function cambiarRol($id)
+    {
+        $usuario = Usuario::findOrFail($id);
+        
+        // Obtener el rol actual
+        $rolActual = $usuario->rol?->nombre;
+        
+        // Cambiar el rol
+        if ($rolActual === 'admin') {
+            // Cambiar a usuario
+            $usuario->rol_id = 2;
+            $mensaje = "Usuario '{$usuario->nombre}' ahora es Usuario Normal";
+        } else {
+            // Cambiar a admin
+            $usuario->rol_id = 1;
+            $mensaje = "Usuario '{$usuario->nombre}' ahora es Administrador";
+        }
+        
+        $usuario->save();
+        
+        return redirect()->route('admin.usuarios')
+            ->with('status', $mensaje);
     }
 }
