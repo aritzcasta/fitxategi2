@@ -4,7 +4,7 @@
     <div class="max-w-6xl mx-auto space-y-8">
 
         <div class="flex items-center gap-4 mb-2">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
@@ -22,7 +22,7 @@
         @endif
 
         <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div class="bg-gradient-to-br from-rose-500 to-red-600 px-8 py-6">
+            <div class="bg-gradient-to-br from-emerald-500 to-green-600 px-8 py-6">
                 <h2 class="text-xl font-bold text-white">Añadir festivo</h2>
                 <p class="text-slate-300 text-sm">Puedes añadir varias fechas sueltas o un rango (desde/hasta)</p>
             </div>
@@ -37,7 +37,7 @@
                         <div>
                             <label for="desde" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">Desde (opcional)</label>
                             <input id="desde" name="desde" type="date" value="{{ old('desde') }}"
-                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('desde') ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition">
+                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('desde') ? 'border-emerald-300 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-emerald-600 dark:focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-emerald-200 dark:focus:ring-emerald-700 transition">
                             @error('desde')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -45,7 +45,7 @@
                         <div>
                             <label for="hasta" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">Hasta (opcional)</label>
                             <input id="hasta" name="hasta" type="date" value="{{ old('hasta') }}"
-                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('hasta') ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition">
+                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('hasta') ? 'border-emerald-300 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-emerald-600 dark:focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-emerald-200 dark:focus:ring-emerald-700 transition">
                             @error('hasta')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -53,7 +53,7 @@
                         <div>
                             <label for="nombre" class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">Descripción (opcional)</label>
                             <input id="nombre" name="nombre" type="text" value="{{ old('nombre') }}"
-                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('nombre') ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition"
+                                   class="w-full px-4 py-3 rounded-xl border-2 {{ $errors->has('nombre') ? 'border-emerald-300 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-emerald-600 dark:focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-emerald-200 dark:focus:ring-emerald-700 transition"
                                    placeholder="Ej: Navidad, Día de la Comunidad...">
                             @error('nombre')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -67,7 +67,7 @@
 
                     <div id="fechas-container" class="space-y-2">
                         <input name="fechas[]" type="date"
-                               class="w-full px-4 py-3 rounded-xl border-2 {{ ($errors->has('fechas') || $errors->has('fechas.*')) ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-red-600 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 transition">
+                               class="w-full px-4 py-3 rounded-xl border-2 {{ ($errors->has('fechas') || $errors->has('fechas.*')) ? 'border-emerald-300 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600' }} bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:border-emerald-600 dark:focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-600 focus:ring-4 focus:ring-emerald-200 dark:focus:ring-emerald-700 transition">
                     </div>
                     @error('fechas')
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
